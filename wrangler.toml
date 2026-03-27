@@ -1,0 +1,9 @@
+name = "gtmvelocity"
+compatibility_date = "2025-09-27"
+
+[assets]
+directory = "."
+
+[[routes]]
+pattern = "gtmvelocity.ai"
+custom_domain = true
