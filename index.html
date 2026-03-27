@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GTM Velocity+ — Your People. Powered Up.</title>
+  <meta name="description" content="AI-powered efficiency built for your GTM team. Speed without the overhead. More impact, less busywork." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F5F0EB;
+      --black: #0D0D0D;
+      --gray: #6B6B6B;
+      --light-gray: #E8E3DE;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--black);
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(245, 240, 235, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      text-decoration: none;
+    }
+
+    .nav-logo-gtm {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      line-height: 1;
+    }
+
+    .nav-logo-plus {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--black);
+      vertical-align: super;
+    }
+
+    .nav-logo-velocity {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-left: 6px;
+      align-self: center;
+    }
+
+    .nav-cta {
+      display: inline-block;
+      padding: 10px 24px;
+      background: var(--black);
+      color: var(--cream);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s;
+    }
+
+    .nav-cta:hover { opacity: 0.75; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 48px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 32px;
+    }
+
+    .hero-headline {
+      font-size: clamp(52px, 8vw, 112px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.92;
+      color: var(--black);
+      margin-bottom: 40px;
+    }
+
+    .hero-headline em {
+      font-style: normal;
+      color: var(--gray);
+    }
+
+    .hero-sub {
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 400;
+      color: var(--gray);
+      max-width: 520px;
+      line-height: 1.5;
+      margin-bottom: 52px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 16px 36px;
+      background: var(--black);
+      color: var(--cream);
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover { opacity: 0.75; }
+
+    .btn-ghost {
+      display: inline-block;
+      padding: 16px 36px;
+      border: 2px solid var(--black);
+      color: var(--black);
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-ghost:hover { background: var(--black); color: var(--cream); }
+
+    /* DIVIDER */
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--light-gray);
+      margin: 0 48px;
+      width: calc(100% - 96px);
+    }
+
+    /* PILLARS */
+    .pillars {
+      padding: 100px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pillars-header {
+      margin-bottom: 72px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--black);
+      max-width: 600px;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2px;
+      background: var(--light-gray);
+      border: 2px solid var(--light-gray);
+    }
+
+    .pillar-card {
+      background: var(--cream);
+      padding: 48px 40px;
+      transition: background 0.25s;
+    }
+
+    .pillar-card:hover { background: var(--black); }
+    .pillar-card:hover .pillar-num,
+    .pillar-card:hover .pillar-title,
+    .pillar-card:hover .pillar-body { color: var(--cream); }
+    .pillar-card:hover .pillar-divider { background: rgba(255,255,255,0.15); }
+
+    .pillar-num {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--gray);
+      margin-bottom: 32px;
+      transition: color 0.25s;
+    }
+
+    .pillar-divider {
+      width: 32px;
+      height: 2px;
+      background: var(--light-gray);
+      margin-bottom: 24px;
+      transition: background 0.25s;
+    }
+
+    .pillar-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      margin-bottom: 16px;
+      line-height: 1.2;
+      transition: color 0.25s;
+    }
+
+    .pillar-body {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--gray);
+      line-height: 1.6;
+      transition: color 0.25s;
+    }
+
+    /* CTA SECTION */
+    .cta-section {
+      background: var(--black);
+      padding: 100px 48px;
+      text-align: center;
+    }
+
+    .cta-section .section-label { color: rgba(255,255,255,0.4); }
+
+    .cta-headline {
+      font-size: clamp(36px, 5vw, 72px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--cream);
+      margin-bottom: 24px;
+    }
+
+    .cta-sub {
+      font-size: 18px;
+      color: rgba(255,255,255,0.5);
+      max-width: 440px;
+      margin: 0 auto 48px;
+      line-height: 1.5;
+    }
+
+    .btn-cream {
+      display: inline-block;
+      padding: 16px 40px;
+      background: var(--cream);
+      color: var(--black);
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s;
+    }
+
+    .btn-cream:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--light-gray);
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+
+    .footer-logo-gtm {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--black);
+    }
+
+    .footer-logo-plus {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--black);
+      vertical-align: super;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--gray);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .hero { padding: 100px 24px 60px; }
+      .pillars { padding: 72px 24px; }
+      .cta-section { padding: 72px 24px; }
+      footer { padding: 32px 24px; flex-direction: column; gap: 16px; text-align: center; }
+      .section-divider { margin: 0 24px; width: calc(100% - 48px); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">
+      <span class="nav-logo-gtm">GTM</span><span class="nav-logo-plus">+</span>
+      <span class="nav-logo-velocity">Velocity</span>
+    </a>
+    <a class="nav-cta" href="#contact">Get Early Access</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-eyebrow">GTM Velocity+</p>
+    <h1 class="hero-headline">Your people,<br /><em>powered up.</em></h1>
+    <p class="hero-sub">AI-powered efficiency, built for your business. Speed without the overhead. Impact without the chaos.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#contact">Get Early Access</a>
+      <a class="btn-ghost" href="#pillars">Learn More</a>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- PILLARS -->
+  <section class="pillars" id="pillars">
+    <div class="pillars-header">
+      <p class="section-label">What We Do</p>
+      <h2 class="section-title">Your team, amplified.</h2>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <p class="pillar-num">01</p>
+        <div class="pillar-divider"></div>
+        <h3 class="pillar-title">Power of AI, No New Headcount</h3>
+        <p class="pillar-body">Your team, amplified. Do more with the people you have — not by adding more people.</p>
+      </div>
+      <div class="pillar-card">
+        <p class="pillar-num">02</p>
+        <div class="pillar-divider"></div>
+        <h3 class="pillar-title">Efficiency &amp; Speed</h3>
+        <p class="pillar-body">Speed without the overhead. Move faster on what matters and stop paying the tax of slow, manual processes.</p>
+      </div>
+      <div class="pillar-card">
+        <p class="pillar-num">03</p>
+        <div class="pillar-divider"></div>
+        <h3 class="pillar-title">Intelligence &amp; Optimization</h3>
+        <p class="pillar-body">AI-powered efficiency, built for your business. Smarter workflows, sharper decisions, better results.</p>
+      </div>
+      <div class="pillar-card">
+        <p class="pillar-num">04</p>
+        <div class="pillar-divider"></div>
+        <h3 class="pillar-title">Empowerment-Focused</h3>
+        <p class="pillar-body">Less busywork. More impact. Give your team back the time and energy to do the work that actually moves the needle.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="contact">
+    <p class="section-label">Coming Soon</p>
+    <h2 class="cta-headline">Ready to power<br />up your team?</h2>
+    <p class="cta-sub">GTM Velocity+ is launching soon. Be the first to know.</p>
+    <a class="btn-cream" href="mailto:hello@gtmvelocity.ai">Get Early Access</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">
+      <span class="footer-logo-gtm">GTM</span><span class="footer-logo-plus">+</span>
+    </div>
+    <p class="footer-copy">&copy; 2026 GTM Velocity. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
