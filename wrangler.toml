@@ -1,9 +1,36 @@
-name = "gtmvelocity"
-compatibility_date = "2025-09-27"
+name                 = "gtmvelocity"
+main                 = "src/worker.js"
+compatibility_date   = "2025-09-27"
+compatibility_flags  = ["nodejs_compat"]
 
 [assets]
 directory = "."
+binding   = "ASSETS"
 
 [[routes]]
-pattern = "gtmvelocity.ai"
+pattern      = "gtmvelocity.ai"
 custom_domain = true
+
+# ──────────────────────────────────────────────────────────────────
+# Secrets — set once via Wrangler CLI, never commit to source:
+#   wrangler secret put RESEND_API_KEY
+#   wrangler secret put TURNSTILE_SECRET_KEY
+#   wrangler secret put SLACK_WEBHOOK_URL     (optional)
+#   wrangler secret put CONTACT_EMAIL         (optional override)
+#
+# Resend setup:   https://resend.com  →  create account, verify gtmvelocity.ai domain, get API key
+# Turnstile setup: https://dash.cloudflare.com → Turnstile → Add site
+#                  Replace the test site key in contact.html with your production site key
+# Slack setup:    Create an Incoming Webhook app in your Slack workspace
+# ──────────────────────────────────────────────────────────────────
+
+# ──────────────────────────────────────────────────────────────────
+# KV Rate Limiting (optional but recommended for production)
+# Steps:
+#   1. wrangler kv:namespace create RATE_LIMIT_KV
+#   2. Copy the id printed to stdout
+#   3. Uncomment the block below and paste the id
+# ──────────────────────────────────────────────────────────────────
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT_KV"
+# id      = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"

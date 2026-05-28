@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — GTMVelocity.ai</title>
+  <meta name="description" content="Get in touch to discuss an AI-powered revenue engagement with GTMVelocity.ai." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!--
+    Cloudflare Turnstile
+    ─────────────────────────────────────────────────────────────
+    TEST keys (always pass — safe for development/staging):
+      Site key:   1x00000000000000000000AA
+      Secret key: 1x0000000000000000000000000000000AA
+
+    Before going to production:
+      1. Visit https://dash.cloudflare.com → Turnstile → Add site
+      2. Replace TURNSTILE_SITE_KEY below with your real site key
+      3. Set the matching secret key: wrangler secret put TURNSTILE_SECRET_KEY
+    ─────────────────────────────────────────────────────────────
+  -->
+  <script>
+    const TURNSTILE_SITE_KEY = '1x00000000000000000000AA'; // ← replace with your production site key
+  </script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+  <!--
+    Analytics
+    ─────────────────────────────────────────────────────────────
+    To enable Google Analytics 4, replace G-XXXXXXXXXX with your
+    Measurement ID and uncomment the two lines below.
+    ─────────────────────────────────────────────────────────────
+  -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script> -->
+  <!-- <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #06091A;
+      --surface:  #0C1128;
+      --surface2: #111832;
+      --border:   rgba(255,255,255,0.07);
+      --blue:     #2D9CDB;
+      --violet:   #7C5CFC;
+      --teal:     #00C9A7;
+      --text:     #F0F2FA;
+      --muted:    #8B93B0;
+      --label:    #5A6380;
+      --error:    #FF6B6B;
+      --error-bg: rgba(255,107,107,0.08);
+      --success:  #00C9A7;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,9,26,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      gap: 24px;
+    }
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--blue); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex: 1;
+      justify-content: center;
+    }
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--text); font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-cta {
+      display: inline-block;
+      padding: 9px 22px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+    }
+
+    /* ─── PAGE LAYOUT ─────────────────────────────── */
+    .page-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 72px 48px 96px;
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .form-hero {
+      margin-bottom: 48px;
+    }
+    .form-hero-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+    .form-hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .form-hero h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .form-hero p {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ─── FORM CARD ───────────────────────────────── */
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 40px 36px;
+    }
+
+    /* ─── REQUIRED NOTICE ─────────────────────────── */
+    .required-notice {
+      font-size: 12px;
+      color: var(--label);
+      margin-bottom: 28px;
+      letter-spacing: 0.2px;
+    }
+
+    /* ─── FIELD GROUP ─────────────────────────────── */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 22px;
+    }
+    .field-group:last-of-type { margin-bottom: 0; }
+
+    /* ─── LABELS ──────────────────────────────────── */
+    label {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .optional-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: none;
+      color: var(--label);
+    }
+
+    /* ─── INPUTS ──────────────────────────────────── */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 9px;
+      padding: 12px 15px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      line-height: 1.5;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input::placeholder,
+    textarea::placeholder { color: var(--label); }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(45,156,219,0.14);
+    }
+
+    /* Error state */
+    input.field-invalid,
+    select.field-invalid,
+    textarea.field-invalid {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px var(--error-bg);
+    }
+
+    /* Select arrow */
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235A6380' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+    select option { background: var(--surface2); color: var(--text); }
+
+    /* Textarea */
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* ─── FIELD HINT ──────────────────────────────── */
+    .field-hint {
+      font-size: 12px;
+      color: var(--label);
+      line-height: 1.5;
+    }
+
+    /* ─── FIELD ERROR ─────────────────────────────── */
+    .field-error {
+      font-size: 12.5px;
+      color: var(--error);
+      display: none;
+      line-height: 1.4;
+    }
+    .field-error.visible { display: block; }
+
+    /* ─── TURNSTILE ───────────────────────────────── */
+    .turnstile-wrap {
+      margin: 28px 0 24px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    /* ─── ERROR BANNER ────────────────────────────── */
+    .error-banner {
+      display: none;
+      background: var(--error-bg);
+      border: 1px solid rgba(255,107,107,0.25);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: var(--error);
+      line-height: 1.5;
+    }
+    .error-banner.visible { display: block; }
+    .error-banner a { color: var(--error); font-weight: 600; }
+
+    /* ─── SUBMIT BUTTON ───────────────────────────── */
+    .submit-btn {
+      width: 100%;
+      padding: 15px 32px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      letter-spacing: 0.01em;
+    }
+    .submit-btn:hover:not(:disabled) { opacity: 0.88; }
+    .submit-btn:active:not(:disabled) { transform: scale(0.99); }
+    .submit-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .submit-btn:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    /* ─── PRIVACY NOTICE ──────────────────────────── */
+    .privacy-notice {
+      font-size: 12px;
+      color: var(--label);
+      line-height: 1.55;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    /* ─── EMAIL FALLBACK ──────────────────────────── */
+    .email-fallback {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .email-fallback a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .email-fallback a:hover { text-decoration: underline; }
+
+    /* ─── SUCCESS STATE ───────────────────────────── */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 48px 32px;
+    }
+    .success-state.visible { display: block; }
+
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(0,201,167,0.12);
+      border: 1px solid rgba(0,201,167,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 22px;
+    }
+
+    .success-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      letter-spacing: -0.3px;
+    }
+
+    .success-body {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 380px;
+      margin: 0 auto 28px;
+    }
+
+    .btn-ghost {
+      display: inline-block;
+      padding: 11px 28px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 9px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+    /* ─── HONEYPOT (visually hidden, accessible) ──── */
+    .hp-field {
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .footer-logo span { color: var(--blue); }
+    .footer-copy { font-size: 12px; color: var(--label); }
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; flex-direction: column; position: fixed; top: 61px; left: 0; right: 0; background: rgba(6,9,26,0.98); padding: 28px 24px 36px; gap: 24px; border-bottom: 1px solid var(--border); z-index: 99; justify-content: flex-start; }
+      .nav-links.open { display: flex; }
+      .nav-hamburger { display: flex; }
+      .page-wrap { padding: 48px 20px 72px; }
+      .form-card { padding: 28px 24px 26px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">GTMVelocity<span>.ai</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="framework.html" class="nav-link">Framework</a>
+    <a href="engagement.html" class="nav-link">Engagement</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="about.html" class="nav-link">About</a>
+  </div>
+  <div class="nav-right">
+    <a href="contact.html" class="nav-cta active" style="background:rgba(45,156,219,0.15);color:var(--blue);border:1px solid rgba(45,156,219,0.3);">Contact Us</a>
+    <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+  <div class="page-wrap">
+
+    <!-- HERO -->
+    <div class="form-hero">
+      <div class="form-hero-eyebrow">Prospective Clients</div>
+      <h1>Let's start<br/><em>the conversation.</em></h1>
+      <p>Tell us a little about your situation and what you're trying to solve. We'll review your inquiry and follow up within 1 business day.</p>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="form-card">
+
+      <!-- Success state (shown after successful submission) -->
+      <div id="successState" class="success-state" role="status" aria-live="polite">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Inquiry received.</div>
+        <div class="success-body">
+          Thanks — we received your inquiry. We typically reply within 1 business day.
+        </div>
+        <a href="index.html" class="btn-ghost">← Back to GTMVelocity.ai</a>
+      </div>
+
+      <!-- Error banner (shown on failed submission) -->
+      <div id="errorBanner" class="error-banner" role="alert" aria-live="assertive">
+        Something went wrong. Please try again or email us directly at
+        <a href="mailto:josh@gtmvelocity.ai">josh@gtmvelocity.ai</a>.
+      </div>
+
+      <!-- THE FORM -->
+      <form id="contactForm" novalidate autocomplete="on">
+
+        <div class="required-notice">* Required</div>
+
+        <!-- Honeypot — must remain empty for real submissions -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="_hp">Leave this blank</label>
+          <input type="text" id="_hp" name="_hp" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <!-- Full Name -->
+        <div class="field-group" id="group-fullName">
+          <label for="fullName">Full Name *</label>
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            autocomplete="name"
+            placeholder="Jane Smith"
+            required
+            aria-required="true"
+            aria-describedby="error-fullName"
+          />
+          <span id="error-fullName" class="field-error" role="alert"></span>
+        </div>
+
+        <!-- Work Email -->
+        <div class="field-group" id="group-workEmail">
+          <label for="workEmail">Work Email *</label>
+          <input
+            type="email"
+            id="workEmail"
+            name="workEmail"
+            autocomplete="email"
+            placeholder="jane@company.com"
+            required
+            aria-required="true"
+            aria-describedby="error-workEmail"
+          />
+          <span id="error-workEmail" class="field-error" role="alert"></span>
+        </div>
+
+        <!-- Company Name -->
+        <div class="field-group" id="group-companyName">
+          <label for="companyName">Company Name *</label>
+          <input
+            type="text"
+            id="companyName"
+            name="companyName"
+            autocomplete="organization"
+            placeholder="Acme Inc."
+            required
+            aria-required="true"
+            aria-describedby="error-companyName"
+          />
+          <span id="error-companyName" class="field-error" role="alert"></span>
+        </div>
+
+        <!-- Phone (optional) -->
+        <div class="field-group" id="group-phone">
+          <label for="phone">Phone <span class="optional-label">(optional)</span></label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            autocomplete="tel"
+            placeholder="+1 (555) 000-0000"
+            aria-describedby="error-phone"
+          />
+          <span id="error-phone" class="field-error" role="alert"></span>
+        </div>
+
+        <!-- Inquiry Type (optional — drives routing) -->
+        <div class="field-group" id="group-inquiryType">
+          <label for="inquiryType">What best describes your interest? <span class="optional-label">(optional)</span></label>
+          <select
+            id="inquiryType"
+            name="inquiryType"
+            autocomplete="off"
+            aria-describedby="error-inquiryType"
+          >
+            <option value="">Select one…</option>
+            <option value="phase1">Phase I — Customer Intelligence &amp; GTM Architecture</option>
+            <option value="phase2">Phase II — AI-Native Acceleration</option>
+            <option value="full">Full 180-Day Engagement</option>
+            <option value="advisory">Advisory / Strategic Discussion</option>
+            <option value="other">Something Else</option>
+          </select>
+          <span id="error-inquiryType" class="field-error" role="alert"></span>
+        </div>
+
+        <!-- What they need help with -->
+        <div class="field-group" id="group-helpDescription">
+          <label for="helpDescription">What are you trying to solve? *</label>
+          <textarea
+            id="helpDescription"
+            name="helpDescription"
+            rows="5"
+            placeholder="Describe what you're working on, what isn't working, and what success looks like…"
+            required
+            aria-required="true"
+            aria-describedby="hint-helpDescription error-helpDescription"
+          ></textarea>
+          <span id="hint-helpDescription" class="field-hint">The more context you share, the faster we can respond with something useful.</span>
+          <span id="error-helpDescription" class="field-error" role="alert"></span>
+        </div>
+
+        <!-- Cloudflare Turnstile widget -->
+        <div class="turnstile-wrap">
+          <div
+            id="turnstileWidget"
+            class="cf-turnstile"
+            data-sitekey="1x00000000000000000000AA"
+            data-theme="dark"
+            data-size="normal"
+          ></div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" id="submitBtn" class="submit-btn">
+          Start the Conversation
+        </button>
+
+        <!-- Privacy notice -->
+        <p class="privacy-notice">
+          We'll use this information only to respond to your inquiry and will not add you to marketing emails without your consent.
+        </p>
+
+      </form>
+
+    </div><!-- /.form-card -->
+
+    <!-- Direct email fallback -->
+    <p class="email-fallback">
+      Prefer to reach out directly?&nbsp;&nbsp;<a href="mailto:josh@gtmvelocity.ai">josh@gtmvelocity.ai</a>
+    </p>
+
+  </div><!-- /.page-wrap -->
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GTMVelocity<span>.ai</span></div>
+  <div class="footer-copy">© 2026 GTMVelocity.ai · Built for AI-native revenue teams</div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  FORM LOGIC
+  ══════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  // ── Configuration ──────────────────────────────────────────────
+  const API_ENDPOINT = '/api/contact';
+
+  // Validation rules (mirrors server-side FIELD_RULES)
+  const RULES = {
+    fullName:        { required: true,  minLen: 2,   maxLen: 100, label: 'Full name'  },
+    workEmail:       { required: true,  email: true, maxLen: 254, label: 'Work email' },
+    companyName:     { required: true,  minLen: 1,   maxLen: 100, label: 'Company'    },
+    helpDescription: { required: true,  minLen: 10,  maxLen: 2000, label: 'This field' },
+    phone:           { required: false,              maxLen: 30  },
+    inquiryType:     { required: false                           },
+  };
+
+  // ── Analytics wrapper ─────────────────────────────────────────
+  // Fires gtag events when GA is loaded; logs to console otherwise.
+  // Swap this function body for Segment, Mixpanel, etc. as needed.
+  function track(eventName, params) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, params || {});
+    } else {
+      console.log('[analytics]', eventName, params || {});
+    }
+  }
+
+  // ── Element refs ──────────────────────────────────────────────
+  const form         = document.getElementById('contactForm');
+  const submitBtn    = document.getElementById('submitBtn');
+  const errorBanner  = document.getElementById('errorBanner');
+  const successState = document.getElementById('successState');
+  const formCard     = document.querySelector('.form-card');
+
+  // ── Track form view ───────────────────────────────────────────
+  track('form_view', { form_id: 'contact' });
+
+  // ── Track form started (first interaction) ────────────────────
+  let formStarted = false;
+  form.addEventListener('input', function onFirstInput() {
+    if (!formStarted) {
+      formStarted = true;
+      track('form_started', { form_id: 'contact' });
+      form.removeEventListener('input', onFirstInput);
+    }
+  }, { once: false });
+
+  // ── Track inquiry type selection ──────────────────────────────
+  document.getElementById('inquiryType').addEventListener('change', function () {
+    if (this.value) {
+      track('inquiry_type_selected', { inquiry_type: this.value });
+    }
+  });
+
+  // ── Real-time validation on blur ──────────────────────────────
+  ['fullName', 'workEmail', 'companyName', 'phone', 'helpDescription'].forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('blur', function () { validateField(id, el.value); });
+      el.addEventListener('input', function () {
+        if (el.classList.contains('field-invalid')) {
+          validateField(id, el.value); // Clear error as user types
+        }
+      });
+    }
+  });
+
+  // ── Form submission ───────────────────────────────────────────
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // Client-side validation
+    const errors = validateAll();
+    if (Object.keys(errors).length > 0) {
+      displayErrors(errors);
+      // Focus first invalid field
+      const firstInvalid = form.querySelector('.field-invalid');
+      if (firstInvalid) firstInvalid.focus();
+      return;
+    }
+
+    // Get Turnstile token
+    const turnstileInput = form.querySelector('[name="cf-turnstile-response"]');
+    const turnstileToken = turnstileInput ? turnstileInput.value : '';
+
+    // Build payload
+    const payload = {
+      fullName:        getValue('fullName'),
+      workEmail:       getValue('workEmail'),
+      companyName:     getValue('companyName'),
+      helpDescription: getValue('helpDescription'),
+      phone:           getValue('phone'),
+      inquiryType:     getValue('inquiryType'),
+      turnstileToken,
+      _hp:             getValue('_hp'),
+    };
+
+    // Loading state
+    setLoading(true);
+    hideErrorBanner();
+
+    try {
+      const res  = await fetch(API_ENDPOINT, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        showSuccess();
+        track('form_submitted', { form_id: 'contact', inquiry_type: payload.inquiryType });
+      } else {
+        // Server returned validation errors or a hard failure
+        if (data.errors) displayErrors(data.errors);
+        showErrorBanner(data.message);
+        track('form_submit_failed', { form_id: 'contact', reason: data.message });
+        resetTurnstile();
+      }
+    } catch (err) {
+      console.error('Form submission error:', err);
+      showErrorBanner();
+      track('form_submit_failed', { form_id: 'contact', reason: 'network_error' });
+      resetTurnstile();
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  // ── Validation helpers ────────────────────────────────────────
+  function validateAll() {
+    const errors = {};
+    for (const [field, rules] of Object.entries(RULES)) {
+      const el = document.getElementById(field);
+      if (!el) continue;
+      const error = validateField(field, el.value);
+      if (error) errors[field] = error;
+    }
+    return errors;
+  }
+
+  function validateField(field, raw) {
+    const rules = RULES[field];
+    if (!rules) return null;
+    const value = raw.trim();
+
+    let error = null;
+
+    if (rules.required && value === '') {
+      error = `${rules.label || 'This field'} is required.`;
+    } else if (value !== '' && rules.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      error = 'Please enter a valid email address.';
+    } else if (value !== '' && rules.minLen != null && value.length < rules.minLen) {
+      error = `Please enter at least ${rules.minLen} characters.`;
+    } else if (value !== '' && rules.maxLen != null && value.length > rules.maxLen) {
+      error = `Please keep this under ${rules.maxLen} characters.`;
+    }
+
+    setFieldError(field, error);
+    return error;
+  }
+
+  function displayErrors(errors) {
+    for (const [field, message] of Object.entries(errors)) {
+      setFieldError(field, message);
+    }
+  }
+
+  function setFieldError(field, message) {
+    const el    = document.getElementById(field);
+    const errEl = document.getElementById('error-' + field);
+    if (!el || !errEl) return;
+
+    if (message) {
+      el.classList.add('field-invalid');
+      el.setAttribute('aria-invalid', 'true');
+      errEl.textContent = message;
+      errEl.classList.add('visible');
+    } else {
+      el.classList.remove('field-invalid');
+      el.removeAttribute('aria-invalid');
+      errEl.textContent = '';
+      errEl.classList.remove('visible');
+    }
+  }
+
+  // ── UI state helpers ──────────────────────────────────────────
+  function getValue(id) {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function setLoading(loading) {
+    submitBtn.disabled = loading;
+    submitBtn.textContent = loading ? 'Sending…' : 'Start the Conversation';
+  }
+
+  function showSuccess() {
+    form.style.display       = 'none';
+    errorBanner.style.display = 'none';
+    successState.classList.add('visible');
+    successState.focus();
+    window.scrollTo({ top: formCard.offsetTop - 100, behavior: 'smooth' });
+  }
+
+  function showErrorBanner(msg) {
+    if (msg) {
+      errorBanner.textContent = '';
+      const text = document.createTextNode(
+        msg + ' Email us directly at '
+      );
+      const link = document.createElement('a');
+      link.href      = 'mailto:josh@gtmvelocity.ai';
+      link.textContent = 'josh@gtmvelocity.ai';
+      errorBanner.appendChild(text);
+      errorBanner.appendChild(link);
+      errorBanner.appendChild(document.createTextNode('.'));
+    }
+    errorBanner.classList.add('visible');
+    errorBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function hideErrorBanner() {
+    errorBanner.classList.remove('visible');
+  }
+
+  function resetTurnstile() {
+    if (typeof window.turnstile !== 'undefined') {
+      window.turnstile.reset('#turnstileWidget');
+    }
+  }
+
+  // ── Mobile nav ────────────────────────────────────────────────
+  window.toggleMenu = function () {
+    document.getElementById('navLinks').classList.toggle('open');
+  };
+
+})();
+</script>
+
+</body>
+</html>
