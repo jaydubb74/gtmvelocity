@@ -20,8 +20,8 @@
       --teal:      #00C9A7;
       --orange:    #F2994A;
       --text:      #F0F2FA;
-      --muted:     #8B93B0;
-      --label:     #5A6380;
+      --muted:     #B0B8CE;
+      --label:     #7280A0;
     }
 
     html { scroll-behavior: smooth; }
@@ -171,6 +171,15 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+    }
+
+    .hero-subhead {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--muted);
+      margin-bottom: 20px;
     }
 
     .hero-sub {
@@ -564,7 +573,8 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-badge">Jobs to Be Done · AI-Native GTM</div>
-  <h1>Three Jobs.<br/>One <em>Revenue System.</em></h1>
+  <h1>The <em>GTMVelocity</em> Framework</h1>
+  <p class="hero-subhead">Three Jobs. One Revenue System.</p>
   <p class="hero-sub">
     Revenue architecture was designed for the subscription era. The GTMVelocity Framework is built for what comes next — a world where AI compresses the cost of intelligence, eliminates repetitive execution, and rewards teams that build their motion on a foundation of customer truth.
   </p>

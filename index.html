@@ -20,8 +20,8 @@
       --violet:  #7C5CFC;
       --teal:    #00C9A7;
       --text:    #F0F2FA;
-      --muted:   #8B93B0;
-      --label:   #5A6380;
+      --muted:   #B0B8CE;
+      --label:   #7280A0;
     }
 
     html { scroll-behavior: smooth; }
@@ -238,6 +238,16 @@
       margin-bottom: 16px;
     }
 
+    .diff-eyebrow {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--blue);
+      margin-bottom: 12px;
+      text-transform: none;
+    }
+
     .section-heading {
       font-family: 'Space Grotesk', sans-serif;
       font-size: clamp(28px, 3.5vw, 42px);
@@ -250,7 +260,7 @@
 
     .diff-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1.1fr;
+      grid-template-columns: 1fr 1.15fr;
       gap: 20px;
     }
 
@@ -316,6 +326,43 @@
       background: rgba(45,156,219,0.12);
       color: #7BC8EC;
       border: 1px solid rgba(45,156,219,0.2);
+    }
+
+    .old-way-models {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .old-model {
+      padding: 18px 20px;
+      background: rgba(255,255,255,0.025);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .old-model-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 6px;
+    }
+
+    .old-model-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .old-model-body {
+      font-size: 13px;
+      color: var(--label);
+      line-height: 1.65;
     }
 
     /* ─── FRAMEWORK PREVIEW ───────────────────────── */
@@ -473,29 +520,34 @@
 
 <!-- DIFFERENTIATOR -->
 <section class="differentiator">
-  <div class="section-eyebrow">Why GTMVelocity.ai</div>
+  <div class="diff-eyebrow">Why partner with GTM Velocity</div>
   <h2 class="section-heading">A different kind<br/>of partner.</h2>
   <div class="diff-grid">
 
     <div class="diff-card">
-      <div class="diff-type">Traditional Consultant</div>
-      <div class="diff-icon">📄</div>
-      <div class="diff-title">100 slides.<br/>Good luck.</div>
-      <div class="diff-body">You get a strategy deck, a framework presentation, and a handshake. Execution is left entirely to you — on top of everything else you're already managing.</div>
-      <div class="diff-tags">
-        <span class="diff-tag">Strategy Only</span>
-        <span class="diff-tag">No Execution</span>
-      </div>
-    </div>
+      <div class="diff-type">The Old Way</div>
+      <div class="old-way-models">
 
-    <div class="diff-card">
-      <div class="diff-type">Traditional Fractional Exec</div>
-      <div class="diff-icon">⏳</div>
-      <div class="diff-title">Part-time.<br/>Permanent.</div>
-      <div class="diff-body">They join as a quasi-employee, maintain the status quo, and never quite leave. The dependency deepens, the clock keeps running, and the team doesn't grow.</div>
-      <div class="diff-tags">
-        <span class="diff-tag">Maintains Status Quo</span>
-        <span class="diff-tag">No Exit</span>
+        <div class="old-model">
+          <div class="old-model-label">Outdated Consultant</div>
+          <div class="old-model-title">100 slides. Good luck.</div>
+          <div class="old-model-body">You get a strategy deck, a framework presentation, and a handshake. Execution is left entirely to you — on top of everything else you're already managing.</div>
+          <div class="diff-tags" style="margin-top:10px;">
+            <span class="diff-tag">Strategy Only</span>
+            <span class="diff-tag">No Execution</span>
+          </div>
+        </div>
+
+        <div class="old-model">
+          <div class="old-model-label">Outdated Fractional Executive</div>
+          <div class="old-model-title">Maintains the status quo. Never leaves.</div>
+          <div class="old-model-body">They join as a quasi-employee, maintain the status quo, and never quite leave. The dependency deepens, the clock keeps running, and the team doesn't grow.</div>
+          <div class="diff-tags" style="margin-top:10px;">
+            <span class="diff-tag">Maintains Status Quo</span>
+            <span class="diff-tag">No Exit</span>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -503,10 +555,11 @@
       <div class="diff-type">GTMVelocity.ai</div>
       <div class="diff-icon">⚡</div>
       <div class="diff-title">Tactical intervention.<br/>Full empowerment.</div>
-      <div class="diff-body">We come in for 90 to 180 days. We install a modern, AI-powered revenue engine, build the infrastructure, prove that it runs — then step away completely so your people own it.</div>
+      <div class="diff-body">We come in for 90 to 180 days. We install a modern, AI-powered revenue engine, build the infrastructure, prove that it runs — then hand it off completely so your team owns it.</div>
       <div class="diff-tags">
         <span class="diff-tag">90–180 Days</span>
         <span class="diff-tag">AI-Powered</span>
+        <span class="diff-tag">Full Handoff</span>
         <span class="diff-tag">Team Empowered</span>
       </div>
     </div>
