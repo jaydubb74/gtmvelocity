@@ -1,17 +1,27 @@
 /**
  * GTMVelocity.ai — Contact Form API Worker
  *
- * Required secrets (set via: wrangler secret put <NAME>):
- *   RESEND_API_KEY        — resend.com API key for email delivery
- *   TURNSTILE_SECRET_KEY  — Cloudflare Turnstile secret key
+ * Email is sent via Cloudflare's built-in email binding (no third-party service).
+ *
+ * One-time Cloudflare dashboard setup (both free):
+ *   1. Email → Email Routing → Enable for gtmvelocity.ai
+ *   2. Email → Email Routing → Destination addresses → Add josh@gtmvelocity.ai → Verify
+ *
+ * Required secret (run once, never commit the value):
+ *   wrangler secret put TURNSTILE_SECRET_KEY
+ *   → paste: 0x4AAAAAADX8a_PaeziipAyVvYOHQAAzOGA
  *
  * Optional secrets:
- *   SLACK_WEBHOOK_URL     — Slack incoming webhook URL
- *   CONTACT_EMAIL         — Override destination (default: josh@gtmvelocity.ai)
+ *   wrangler secret put SLACK_WEBHOOK_URL   (Slack incoming webhook URL)
+ *   wrangler secret put CONTACT_EMAIL       (override destination, default: josh@gtmvelocity.ai)
  *
- * Optional KV binding (for rate limiting):
- *   RATE_LIMIT_KV         — KV namespace binding (see wrangler.toml)
+ * Bindings configured in wrangler.toml:
+ *   SEND_EMAIL   — Cloudflare send_email binding (see wrangler.toml)
+ *   ASSETS       — Static asset serving
+ *   RATE_LIMIT_KV — (optional) KV namespace for rate limiting
  */
+
+import { EmailMessage } from "cloudflare:email";
 
 // ══════════════════════════════════════════════════════════════════
 // CONFIGURATION — edit this section to change behavior
@@ -19,11 +29,12 @@
 
 const CONFIG = {
   defaultContactEmail: 'josh@gtmvelocity.ai',
-  fromEmail:           'GTMVelocity Contact <noreply@gtmvelocity.ai>',
+  fromEmail:           'noreply@gtmvelocity.ai',
+  fromName:            'GTMVelocity Contact Form',
   rateLimit: {
-    enabled:        true,
-    maxRequests:    5,     // max form submissions per IP
-    windowSeconds:  3600,  // per 1-hour window
+    enabled:       true,
+    maxRequests:   5,     // max submissions per IP
+    windowSeconds: 3600,  // per 1-hour window
   },
   allowedOrigins: [
     'https://gtmvelocity.ai',
@@ -33,8 +44,7 @@ const CONFIG = {
 
 /**
  * Inquiry-type routing.
- * To send different inquiry types to different addresses,
- * change the `to` value for each key.
+ * To route different inquiry types to different people, change `to` per key.
  */
 const INQUIRY_ROUTING = {
   phase1:   { label: 'Phase I — Customer Intelligence & GTM Architecture', to: 'josh@gtmvelocity.ai' },
@@ -44,13 +54,13 @@ const INQUIRY_ROUTING = {
   other:    { label: 'Something Else',                                     to: 'josh@gtmvelocity.ai' },
 };
 
-/** Server-side validation rules. Mirror these in the client-side JS. */
+/** Server-side validation rules. Keep in sync with client-side RULES in contact.html. */
 const FIELD_RULES = {
-  fullName:        { required: true,  minLen: 2,   maxLen: 100, label: 'Full name'   },
-  workEmail:       { required: true,  email: true, maxLen: 254, label: 'Work email'  },
-  companyName:     { required: true,  minLen: 1,   maxLen: 100, label: 'Company'     },
+  fullName:        { required: true,  minLen: 2,   maxLen: 100,  label: 'Full name'   },
+  workEmail:       { required: true,  email: true, maxLen: 254,  label: 'Work email'  },
+  companyName:     { required: true,  minLen: 1,   maxLen: 100,  label: 'Company'     },
   helpDescription: { required: true,  minLen: 10,  maxLen: 2000, label: 'Description' },
-  phone:           { required: false,              maxLen: 30,  label: 'Phone'       },
+  phone:           { required: false,              maxLen: 30,   label: 'Phone'       },
   inquiryType:     { required: false, allowedValues: Object.keys(INQUIRY_ROUTING), label: 'Inquiry type' },
 };
 
@@ -59,7 +69,7 @@ const MESSAGES = {
   serverError:     'Something went wrong. Please try again or email us directly.',
   validationError: 'Please check the fields below and try again.',
   rateLimited:     'Too many submissions from this address. Please try again in an hour.',
-  spamDetected:    'Your submission was flagged as spam. Please try again.',
+  spamDetected:    'Your submission was flagged. Please try again.',
   badRequest:      'Invalid request.',
 };
 
@@ -71,7 +81,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // Handle CORS preflight
+    // CORS preflight
     if (request.method === 'OPTIONS') {
       return corsResponse(new Response(null, { status: 204 }), request);
     }
@@ -81,7 +91,7 @@ export default {
       return corsResponse(await handleContact(request, env), request);
     }
 
-    // Static assets — serve everything else from the assets directory
+    // Static assets
     if (env.ASSETS) {
       return env.ASSETS.fetch(request);
     }
@@ -102,17 +112,15 @@ async function handleContact(request, env) {
     return jsonResponse({ success: false, message: MESSAGES.badRequest }, 400);
   }
 
-  // ── Honeypot ────────────────────────────────────────────────────
+  // Honeypot — return 200 silently to confuse bots
   if (typeof body._hp === 'string' && body._hp.trim() !== '') {
-    // Return 200 silently to confuse bots; don't process the submission
     return jsonResponse({ success: true, message: MESSAGES.success });
   }
 
-  // ── Rate limiting ───────────────────────────────────────────────
+  // Rate limiting
   const ip = request.headers.get('CF-Connecting-IP') ||
              request.headers.get('X-Real-IP') ||
              'unknown';
-
   if (CONFIG.rateLimit.enabled) {
     const limited = await checkRateLimit(env, ip);
     if (limited) {
@@ -120,47 +128,46 @@ async function handleContact(request, env) {
     }
   }
 
-  // ── Turnstile verification ──────────────────────────────────────
+  // Turnstile verification
   if (env.TURNSTILE_SECRET_KEY) {
-    const token = body.turnstileToken || '';
-    const valid = await verifyTurnstile(token, env.TURNSTILE_SECRET_KEY, ip);
+    const valid = await verifyTurnstile(
+      body.turnstileToken || '',
+      env.TURNSTILE_SECRET_KEY,
+      ip
+    );
     if (!valid) {
       return jsonResponse({ success: false, message: MESSAGES.spamDetected }, 403);
     }
   }
 
-  // ── Server-side validation ──────────────────────────────────────
+  // Server-side validation
   const errors = validate(body);
   if (Object.keys(errors).length > 0) {
     return jsonResponse({ success: false, message: MESSAGES.validationError, errors }, 422);
   }
 
-  // ── Sanitize & enrich ───────────────────────────────────────────
-  const data = sanitize(body);
-
-  // ── Resolve routing ─────────────────────────────────────────────
+  // Sanitize + enrich
+  const data  = sanitize(body);
   const route = INQUIRY_ROUTING[data.inquiryType] ?? {
     label: 'General Inquiry',
     to:    env.CONTACT_EMAIL || CONFIG.defaultContactEmail,
   };
 
-  // ── Notifications (parallel, non-blocking on CRM) ───────────────
+  // Send notifications — all in parallel; only email is critical path
   const [emailResult, slackResult] = await Promise.allSettled([
     sendEmail(env, data, route),
     sendSlackNotification(env, data, route),
-    syncToCRM(env, data), // fire-and-forget stub
+    syncToCRM(env, data),
   ]);
 
-  // Log outcomes
   console.log(JSON.stringify({
-    event: 'contact_submission',
-    email: emailResult.status,
-    slack: slackResult.status,
+    event:       'contact_submission',
+    email:       emailResult.status,
+    slack:       slackResult.status,
     inquiryType: data.inquiryType,
-    company: data.companyName,
+    company:     data.companyName,
   }));
 
-  // Email is the critical path; Slack failure is non-fatal
   if (emailResult.status === 'rejected') {
     console.error('Email delivery failed:', emailResult.reason);
     return jsonResponse({ success: false, message: MESSAGES.serverError }, 500);
@@ -175,10 +182,8 @@ async function handleContact(request, env) {
 
 function validate(data) {
   const errors = {};
-
   for (const [field, rules] of Object.entries(FIELD_RULES)) {
-    const raw   = data[field];
-    const value = (raw == null ? '' : String(raw)).trim();
+    const value = (data[field] == null ? '' : String(data[field])).trim();
 
     if (rules.required && value === '') {
       errors[field] = `${rules.label} is required.`;
@@ -202,14 +207,13 @@ function validate(data) {
       errors[field] = `Invalid ${rules.label}.`;
     }
   }
-
   return errors;
 }
 
 function sanitize(body) {
   const clean = {};
   for (const [field, rules] of Object.entries(FIELD_RULES)) {
-    const max   = rules.maxLen ?? 2000;
+    const max = rules.maxLen ?? 2000;
     clean[field] = (body[field] == null ? '' : String(body[field])).trim().slice(0, max + 10);
   }
   clean.submittedAt = new Date().toISOString();
@@ -221,7 +225,7 @@ function sanitize(body) {
 // ══════════════════════════════════════════════════════════════════
 
 async function checkRateLimit(env, ip) {
-  if (!env.RATE_LIMIT_KV) return false; // KV not configured — skip silently
+  if (!env.RATE_LIMIT_KV) return false; // KV not bound — skip silently
 
   const key = `rl:contact:${ip}`;
   const { windowSeconds, maxRequests } = CONFIG.rateLimit;
@@ -234,7 +238,7 @@ async function checkRateLimit(env, ip) {
     return false;
   } catch (err) {
     console.error('Rate limit KV error (failing open):', err);
-    return false; // Fail open — don't block legit users if KV is down
+    return false;
   }
 }
 
@@ -244,7 +248,7 @@ async function checkRateLimit(env, ip) {
 
 async function verifyTurnstile(token, secret, ip) {
   try {
-    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    const res    = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ secret, response: token, remoteip: ip }),
@@ -252,62 +256,87 @@ async function verifyTurnstile(token, secret, ip) {
     const result = await res.json();
     return result.success === true;
   } catch (err) {
-    console.error('Turnstile verification failed (failing open):', err);
+    console.error('Turnstile verification error (failing open):', err);
     return true; // Fail open if Turnstile is unreachable
   }
 }
 
 // ══════════════════════════════════════════════════════════════════
-// EMAIL — Resend (resend.com)
+// EMAIL — Cloudflare Email Routing (no third-party service needed)
+//
+// Setup (one time, in Cloudflare dashboard):
+//   1. Email → Email Routing → Enable for gtmvelocity.ai
+//   2. Email → Email Routing → Destination addresses → Add + verify josh@gtmvelocity.ai
 // ══════════════════════════════════════════════════════════════════
 
 async function sendEmail(env, data, route) {
-  const apiKey = env.RESEND_API_KEY;
-  if (!apiKey) {
-    // Log clearly during setup so the problem is obvious
+  if (!env.SEND_EMAIL) {
     console.warn(
-      'RESEND_API_KEY is not set. Email was NOT sent. ' +
-      'Add it via: wrangler secret put RESEND_API_KEY'
+      'SEND_EMAIL binding is not configured. ' +
+      'Add [[send_email]] to wrangler.toml and enable Cloudflare Email Routing.'
     );
-    return; // Don't throw — treat as optional during initial setup
+    // Don't throw — let the form appear to work during initial setup/testing
+    return;
   }
 
   const to      = env.CONTACT_EMAIL || route.to;
   const subject = `New Inquiry: ${data.companyName} — GTMVelocity.ai`;
+  const from    = CONFIG.fromEmail;
 
-  const res = await fetch('https://api.resend.com/emails', {
-    method:  'POST',
-    headers: {
-      Authorization:  `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from:     CONFIG.fromEmail,
-      to:       [to],
-      reply_to: data.workEmail,
-      subject,
-      html:     buildEmailHtml(data, route),
-    }),
+  const raw = buildRawMimeEmail({
+    from:    `${CONFIG.fromName} <${from}>`,
+    to,
+    replyTo: data.workEmail,
+    subject,
+    html:    buildEmailHtml(data, route),
   });
 
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Resend ${res.status}: ${body}`);
+  const message = new EmailMessage(from, to, new Response(raw).body);
+  await env.SEND_EMAIL.send(message);
+}
+
+/**
+ * Builds a raw MIME email string.
+ * Uses base64 encoding for the body to handle UTF-8 safely and
+ * keep all lines within the 998-octet MIME limit.
+ */
+function buildRawMimeEmail({ from, to, replyTo, subject, html }) {
+  const encodedBody = base64MimeEncode(html);
+  return [
+    'MIME-Version: 1.0',
+    `From: ${from}`,
+    `To: ${to}`,
+    `Reply-To: ${replyTo}`,
+    `Subject: ${subject}`,
+    'Content-Type: text/html; charset=utf-8',
+    'Content-Transfer-Encoding: base64',
+    '',
+    encodedBody,
+  ].join('\r\n');
+}
+
+/** Base64-encodes a UTF-8 string with 76-char line wrapping per RFC 2045. */
+function base64MimeEncode(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary  = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
   }
+  const b64 = btoa(binary);
+  return b64.match(/.{1,76}/g)?.join('\r\n') ?? b64;
 }
 
 function buildEmailHtml(data, route) {
-  const phone = data.phone
-    ? `<tr>
-        <td style="padding:10px 0;border-bottom:1px solid #E8E8E8;">
-          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin-bottom:4px;">Phone</div>
-          <div style="font-size:15px;color:#111;">${esc(data.phone)}</div>
-        </td>
-      </tr>`
-    : '';
+  const phoneRow = data.phone ? `
+    <tr>
+      <td style="padding:10px 0;border-bottom:1px solid #E8E8E8;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin-bottom:4px;">Phone</div>
+        <div style="font-size:15px;color:#111;">${esc(data.phone)}</div>
+      </td>
+    </tr>` : '';
 
   const submittedAt = new Date(data.submittedAt).toLocaleString('en-US', {
-    timeZone: 'America/Los_Angeles',
+    timeZone:  'America/Los_Angeles',
     dateStyle: 'medium',
     timeStyle: 'short',
   });
@@ -321,19 +350,13 @@ function buildEmailHtml(data, route) {
       <table width="600" cellpadding="0" cellspacing="0" border="0"
              style="background:#fff;border-radius:12px;overflow:hidden;max-width:600px;width:100%;">
 
-        <!-- Header -->
         <tr>
           <td style="background:#06091A;padding:28px 40px;">
-            <div style="font-size:20px;font-weight:700;color:#2D9CDB;font-family:Arial,sans-serif;letter-spacing:-0.3px;">
-              GTMVelocity<span style="color:#2D9CDB;">.ai</span>
-            </div>
-            <div style="font-size:12px;color:#8B93B0;margin-top:6px;letter-spacing:1px;text-transform:uppercase;">
-              New Contact Inquiry
-            </div>
+            <div style="font-size:20px;font-weight:700;color:#2D9CDB;font-family:Arial,sans-serif;">GTMVelocity.ai</div>
+            <div style="font-size:12px;color:#8B93B0;margin-top:6px;letter-spacing:1px;text-transform:uppercase;">New Contact Inquiry</div>
           </td>
         </tr>
 
-        <!-- Body -->
         <tr>
           <td style="padding:32px 40px 0;">
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -357,7 +380,7 @@ function buildEmailHtml(data, route) {
                   <div style="font-size:15px;color:#111;">${esc(data.companyName)}</div>
                 </td>
               </tr>
-              ${phone}
+              ${phoneRow}
               <tr>
                 <td style="padding:10px 0;border-bottom:1px solid #E8E8E8;">
                   <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin-bottom:4px;">Inquiry Type</div>
@@ -374,7 +397,6 @@ function buildEmailHtml(data, route) {
           </td>
         </tr>
 
-        <!-- Reply CTA -->
         <tr>
           <td style="padding:28px 40px 32px;">
             <a href="mailto:${esc(data.workEmail)}?subject=Re%3A%20Your%20GTMVelocity.ai%20Inquiry"
@@ -384,12 +406,9 @@ function buildEmailHtml(data, route) {
           </td>
         </tr>
 
-        <!-- Footer -->
         <tr>
           <td style="background:#06091A;padding:18px 40px;">
-            <div style="font-size:12px;color:#5A6380;">
-              Submitted ${submittedAt} PT · via GTMVelocity.ai contact form
-            </div>
+            <div style="font-size:12px;color:#5A6380;">Submitted ${submittedAt} PT · via GTMVelocity.ai contact form</div>
           </td>
         </tr>
 
@@ -407,7 +426,7 @@ function buildEmailHtml(data, route) {
 async function sendSlackNotification(env, data, route) {
   const webhookUrl = env.SLACK_WEBHOOK_URL;
   if (!webhookUrl) {
-    console.log('SLACK_WEBHOOK_URL not configured — Slack notification skipped.');
+    console.log('SLACK_WEBHOOK_URL not set — Slack notification skipped.');
     return;
   }
 
@@ -443,7 +462,7 @@ async function sendSlackNotification(env, data, route) {
         type: 'actions',
         elements: [
           {
-            type: 'button',
+            type:  'button',
             text:  { type: 'plain_text', text: 'Reply via Email', emoji: true },
             url:   `mailto:${data.workEmail}?subject=Re: Your GTMVelocity.ai Inquiry`,
             style: 'primary',
@@ -466,19 +485,19 @@ async function sendSlackNotification(env, data, route) {
   });
 
   if (!res.ok) {
-    throw new Error(`Slack webhook error ${res.status}: ${await res.text()}`);
+    throw new Error(`Slack webhook ${res.status}: ${await res.text()}`);
   }
 }
 
 // ══════════════════════════════════════════════════════════════════
 // CRM INTEGRATION STUB
-// Replace the body of this function to integrate with HubSpot, Salesforce, etc.
+// Replace the body of this function to connect HubSpot, Salesforce, etc.
 // ══════════════════════════════════════════════════════════════════
 
 async function syncToCRM(env, data) {
   // ── HubSpot example ────────────────────────────────────────────
   // if (!env.HUBSPOT_API_KEY) return;
-  // const nameParts = data.fullName.trim().split(/\s+/);
+  // const [first, ...rest] = data.fullName.trim().split(/\s+/);
   // await fetch('https://api.hubapi.com/crm/v3/objects/contacts', {
   //   method: 'POST',
   //   headers: {
@@ -487,20 +506,16 @@ async function syncToCRM(env, data) {
   //   },
   //   body: JSON.stringify({
   //     properties: {
-  //       email:      data.workEmail,
-  //       firstname:  nameParts[0] ?? '',
-  //       lastname:   nameParts.slice(1).join(' ') ?? '',
-  //       company:    data.companyName,
-  //       phone:      data.phone,
-  //       message:    data.helpDescription,
+  //       email:     data.workEmail,
+  //       firstname: first ?? '',
+  //       lastname:  rest.join(' ') ?? '',
+  //       company:   data.companyName,
+  //       phone:     data.phone,
+  //       message:   data.helpDescription,
   //     },
   //   }),
   // });
-
-  // ── Salesforce example ─────────────────────────────────────────
-  // Similar pattern — get OAuth token, POST to Lead object endpoint.
-
-  console.log('CRM stub: add your integration here. Received from:', data.companyName);
+  console.log('CRM stub called. Implement integration here. Company:', data.companyName);
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -526,7 +541,6 @@ function corsResponse(response, request) {
   return new Response(response.body, { status: response.status, headers });
 }
 
-/** Basic HTML escaping for use in email templates. */
 function esc(str) {
   return String(str ?? '')
     .replace(/&/g, '&amp;')

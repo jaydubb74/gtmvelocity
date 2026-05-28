@@ -12,24 +12,33 @@ pattern      = "gtmvelocity.ai"
 custom_domain = true
 
 # ──────────────────────────────────────────────────────────────────
-# Secrets — set once via Wrangler CLI, never commit to source:
-#   wrangler secret put RESEND_API_KEY
-#   wrangler secret put TURNSTILE_SECRET_KEY
-#   wrangler secret put SLACK_WEBHOOK_URL     (optional)
-#   wrangler secret put CONTACT_EMAIL         (optional override)
+# EMAIL — Cloudflare Email Routing (free, no third-party service)
 #
-# Resend setup:   https://resend.com  →  create account, verify gtmvelocity.ai domain, get API key
-# Turnstile setup: https://dash.cloudflare.com → Turnstile → Add site
-#                  Replace the test site key in contact.html with your production site key
-# Slack setup:    Create an Incoming Webhook app in your Slack workspace
+# One-time setup in Cloudflare dashboard:
+#   1. Email → Email Routing → Enable for gtmvelocity.ai
+#   2. Email → Email Routing → Destination addresses → Add josh@gtmvelocity.ai → click verify link
+#
+# Then this binding is all you need — no API keys.
+# ──────────────────────────────────────────────────────────────────
+[[send_email]]
+name                = "SEND_EMAIL"
+destination_address = "josh@gtmvelocity.ai"
+
+# ──────────────────────────────────────────────────────────────────
+# Secrets — set once via Wrangler CLI, never commit these values:
+#
+#   wrangler secret put TURNSTILE_SECRET_KEY
+#   → paste: 0x4AAAAAADX8a_PaeziipAyVvYOHQAAzOGA
+#
+#   wrangler secret put SLACK_WEBHOOK_URL     (optional)
+#   wrangler secret put CONTACT_EMAIL         (optional — override destination)
 # ──────────────────────────────────────────────────────────────────
 
 # ──────────────────────────────────────────────────────────────────
 # KV Rate Limiting (optional but recommended for production)
-# Steps:
 #   1. wrangler kv:namespace create RATE_LIMIT_KV
 #   2. Copy the id printed to stdout
-#   3. Uncomment the block below and paste the id
+#   3. Uncomment below and paste the id
 # ──────────────────────────────────────────────────────────────────
 # [[kv_namespaces]]
 # binding = "RATE_LIMIT_KV"
