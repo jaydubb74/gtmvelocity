@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — GTMVelocity.ai</title>
+  <meta name="description" content="GTMVelocity.ai operates on a performance-aligned commercial model. Monthly fees, milestone-linked compensation, and equity options." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #06091A;
+      --surface: #0C1128;
+      --surface2:#111832;
+      --border:  rgba(255,255,255,0.07);
+      --blue:    #2D9CDB;
+      --violet:  #7C5CFC;
+      --teal:    #00C9A7;
+      --orange:  #F2994A;
+      --text:    #F0F2FA;
+      --muted:   #8B93B0;
+      --label:   #5A6380;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,9,26,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      gap: 24px;
+    }
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--blue); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex: 1;
+      justify-content: center;
+    }
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--text); font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-cta {
+      display: inline-block;
+      padding: 9px 22px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 96px 48px 80px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(45,156,219,0.1);
+      border: 1px solid rgba(45,156,219,0.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 28px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* ─── PHILOSOPHY ──────────────────────────────── */
+    .philosophy {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 48px 72px;
+    }
+
+    .philosophy-card {
+      background: linear-gradient(135deg, rgba(45,156,219,0.06), rgba(124,92,252,0.05));
+      border: 1px solid rgba(45,156,219,0.2);
+      border-radius: 20px;
+      padding: 52px 56px;
+      text-align: center;
+    }
+
+    .phi-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 20px;
+    }
+
+    .phi-quote {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(20px, 2.5vw, 26px);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+      letter-spacing: -0.3px;
+      max-width: 680px;
+      margin: 0 auto 20px;
+    }
+
+    .phi-body {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ─── STRUCTURE GRID ──────────────────────────── */
+    .structure {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 16px;
+    }
+    .section-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      color: var(--text);
+      margin-bottom: 40px;
+      line-height: 1.2;
+    }
+
+    .structure-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .structure-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .structure-card:nth-child(1) { border-top: 2px solid var(--blue); }
+    .structure-card:nth-child(2) { border-top: 2px solid var(--violet); }
+    .structure-card:nth-child(3) { border-top: 2px solid var(--teal); }
+
+    .sc-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .structure-card:nth-child(1) .sc-num { color: var(--blue); }
+    .structure-card:nth-child(2) .sc-num { color: var(--violet); }
+    .structure-card:nth-child(3) .sc-num { color: var(--teal); }
+
+    .sc-icon { font-size: 28px; }
+
+    .sc-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .sc-body {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .sc-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      align-self: flex-start;
+    }
+    .structure-card:nth-child(1) .sc-tag { background: rgba(45,156,219,0.1); color: #7BC8EC; border: 1px solid rgba(45,156,219,0.15); }
+    .structure-card:nth-child(2) .sc-tag { background: rgba(124,92,252,0.1); color: #B09BFF; border: 1px solid rgba(124,92,252,0.15); }
+    .structure-card:nth-child(3) .sc-tag { background: rgba(0,201,167,0.1); color: #5EDFC9; border: 1px solid rgba(0,201,167,0.15); }
+
+    /* ─── PRINCIPLES ──────────────────────────────── */
+    .principles {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 48px 96px;
+    }
+
+    .principles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .principle {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 26px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .principle-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .principle:nth-child(1) .principle-icon { background: rgba(45,156,219,0.12); }
+    .principle:nth-child(2) .principle-icon { background: rgba(124,92,252,0.12); }
+    .principle:nth-child(3) .principle-icon { background: rgba(0,201,167,0.12); }
+    .principle:nth-child(4) .principle-icon { background: rgba(242,153,74,0.12); }
+
+    .principle-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+    .principle-text span {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ─── CTA ─────────────────────────────────────── */
+    .cta-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 96px 48px;
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 20px;
+      line-height: 1.15;
+    }
+    .cta-section h2 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta-section p {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 36px;
+      line-height: 1.65;
+    }
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 32px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .footer-logo span { color: var(--blue); }
+    .footer-copy { font-size: 12px; color: var(--label); }
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; flex-direction: column; position: fixed; top: 61px; left: 0; right: 0; background: rgba(6,9,26,0.98); padding: 28px 24px 36px; gap: 24px; border-bottom: 1px solid var(--border); z-index: 99; justify-content: flex-start; }
+      .nav-links.open { display: flex; }
+      .nav-hamburger { display: flex; }
+      .hero { padding: 64px 24px 56px; }
+      .philosophy { padding: 0 24px 56px; }
+      .philosophy-card { padding: 36px 28px; }
+      .structure, .principles { padding: 0 24px 56px; }
+      .structure-grid { grid-template-columns: 1fr; }
+      .principles-grid { grid-template-columns: 1fr; }
+      .cta-section { padding: 64px 24px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">GTMVelocity<span>.ai</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="framework.html" class="nav-link">Framework</a>
+    <a href="engagement.html" class="nav-link">Engagement</a>
+    <a href="pricing.html" class="nav-link active">Pricing</a>
+    <a href="about.html" class="nav-link">About</a>
+  </div>
+  <div class="nav-right">
+    <a href="mailto:josh@gtmvelocity.ai" class="nav-cta">Contact Us</a>
+    <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Commercial Philosophy · Aligned Incentives</div>
+  <h1>Skin in<br/><em>the Game.</em></h1>
+  <p class="hero-sub">
+    We don't sell hours, and we don't maintain permanent residency on your payroll. Our compensation is built to align directly with your results.
+  </p>
+</section>
+
+<!-- PHILOSOPHY CARD -->
+<div class="philosophy">
+  <div class="philosophy-card">
+    <div class="phi-eyebrow">Our Commercial Philosophy</div>
+    <div class="phi-quote">"We operate as an elite, high-intensity partner to fine tune your revenue engine."</div>
+    <div class="phi-body">
+      GTMVelocity.ai operates on a monthly cost for three-month intervals. Because our frameworks are engineered to directly drive efficiency, accuracy, and ultimately accelerate your business, we prefer to align the secondary component of compensation with your job-to-be-done milestones. We actively structure our engagements around performance-linked milestones, and/or equity or advisor shares. We're here to have a material impact on your business — and we want to be aligned with your long-term success.
+    </div>
+  </div>
+</div>
+
+<!-- STRUCTURE -->
+<section class="structure">
+  <div class="section-eyebrow">How It Works</div>
+  <h2 class="section-heading">Three components.<br/>One aligned structure.</h2>
+  <div class="structure-grid">
+
+    <div class="structure-card">
+      <div class="sc-num">01 · Base</div>
+      <div class="sc-icon">📅</div>
+      <div class="sc-title">Monthly Retainer</div>
+      <div class="sc-body">A fixed monthly engagement fee covering the full scope of work for each three-month sprint. Covers dedicated time, deliverable ownership, and hands-on execution — not just advisory hours.</div>
+      <span class="sc-tag">3-Month Intervals</span>
+    </div>
+
+    <div class="structure-card">
+      <div class="sc-num">02 · Performance</div>
+      <div class="sc-icon">🎯</div>
+      <div class="sc-title">Milestone-Linked Compensation</div>
+      <div class="sc-body">A secondary compensation component tied directly to achieving the job-to-be-done milestones defined at the start of each phase. If we hit the outcomes, we share in the value we create.</div>
+      <span class="sc-tag">Results-Linked</span>
+    </div>
+
+    <div class="structure-card">
+      <div class="sc-num">03 · Equity</div>
+      <div class="sc-icon">📈</div>
+      <div class="sc-title">Equity / Advisor Shares</div>
+      <div class="sc-body">For the right partnerships, we're open to structuring a portion of compensation as equity or advisor shares. Long-term alignment with founder and investor outcomes is how we prefer to operate when it makes sense.</div>
+      <span class="sc-tag">Long-Term Alignment</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRINCIPLES -->
+<section class="principles">
+  <div class="section-eyebrow">What We Don't Do</div>
+  <h2 class="section-heading">Clear boundaries.<br/>Better outcomes.</h2>
+  <div class="principles-grid">
+
+    <div class="principle">
+      <div class="principle-icon">🚫</div>
+      <div class="principle-text">
+        <strong>We Don't Sell Hours</strong>
+        <span>Hourly billing creates misaligned incentives. We're paid for outcomes and deliverables, not time on the clock.</span>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-icon">🚫</div>
+      <div class="principle-text">
+        <strong>We Don't Stay Forever</strong>
+        <span>Every engagement is time-boxed by design. The goal is always to leave your team fully empowered — not to create dependency on us.</span>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-icon">✓</div>
+      <div class="principle-text">
+        <strong>We Ship Tangible Assets</strong>
+        <span>Every phase ends with real, deployed deliverables — not decks, reports, or recommendations. You leave with infrastructure you own and can run.</span>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-icon">✓</div>
+      <div class="principle-text">
+        <strong>We Align on Milestones First</strong>
+        <span>Before any engagement starts, we agree on what success looks like at each checkpoint. Commercial terms are structured around those outcomes.</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Let's discuss what<br/><em>alignment looks like.</em></h2>
+  <p>Every engagement is scoped around your specific stage, context, and objectives. Let's start with a conversation about where you are and where you want to go.</p>
+  <a href="mailto:josh@gtmvelocity.ai" class="btn-primary">Start the Conversation →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GTMVelocity<span>.ai</span></div>
+  <div class="footer-copy">© 2026 GTMVelocity.ai · Built for AI-native revenue teams</div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>

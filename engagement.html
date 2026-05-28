@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Engagement — GTMVelocity.ai</title>
+  <meta name="description" content="A 180-day blueprint for installing an AI-powered revenue engine. Phase I builds the foundation; Phase II accelerates with intelligent automation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #06091A;
+      --surface: #0C1128;
+      --surface2:#111832;
+      --border:  rgba(255,255,255,0.07);
+      --blue:    #2D9CDB;
+      --violet:  #7C5CFC;
+      --teal:    #00C9A7;
+      --orange:  #F2994A;
+      --text:    #F0F2FA;
+      --muted:   #8B93B0;
+      --label:   #5A6380;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,9,26,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      gap: 24px;
+    }
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--blue); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex: 1;
+      justify-content: center;
+    }
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--text); font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-cta {
+      display: inline-block;
+      padding: 9px 22px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 96px 48px 80px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(45,156,219,0.1);
+      border: 1px solid rgba(45,156,219,0.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 28px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    /* ─── TIMELINE BAR ────────────────────────────── */
+    .timeline-bar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 64px;
+    }
+    .timeline-track {
+      display: flex;
+      align-items: stretch;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .timeline-segment {
+      flex: 1;
+      padding: 20px 24px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .timeline-segment:last-child { border-right: none; }
+    .timeline-days {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .timeline-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .timeline-pillar {
+      font-size: 11px;
+      color: var(--label);
+    }
+    .seg-1 .timeline-days { color: var(--blue); }
+    .seg-2 .timeline-days { color: var(--violet); }
+    .seg-3 .timeline-days { color: var(--teal); }
+    .seg-4 .timeline-days { color: var(--orange); }
+
+    /* ─── PHASE ───────────────────────────────────── */
+    .phase {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+
+    .phase-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 40px;
+      padding: 32px 36px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+    .phase-1-header { background: linear-gradient(135deg, rgba(45,156,219,0.06), rgba(124,92,252,0.04)); border-color: rgba(45,156,219,0.2); }
+    .phase-2-header { background: linear-gradient(135deg, rgba(0,201,167,0.06), rgba(242,153,74,0.04)); border-color: rgba(0,201,167,0.2); }
+
+    .phase-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .phase-1-header .phase-badge { background: rgba(45,156,219,0.15); color: var(--blue); }
+    .phase-2-header .phase-badge { background: rgba(0,201,167,0.15); color: var(--teal); }
+
+    .phase-meta { flex: 1; }
+
+    .phase-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .phase-1-header .phase-tag { color: var(--blue); }
+    .phase-2-header .phase-tag { color: var(--teal); }
+
+    .phase-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .phase-focus {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .phase-outcome {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      flex-shrink: 0;
+      max-width: 280px;
+    }
+    .phase-outcome strong {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 6px;
+    }
+
+    /* Sprint cards */
+    .sprints {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .sprint-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sprint-header { display: flex; flex-direction: column; gap: 8px; }
+
+    .sprint-days {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .sprint-card:nth-child(odd) .sprint-days { color: var(--blue); }
+    .sprint-card:nth-child(even) .sprint-days { color: var(--violet); }
+
+    .phase-2 .sprint-card:nth-child(odd) .sprint-days { color: var(--teal); }
+    .phase-2 .sprint-card:nth-child(even) .sprint-days { color: var(--orange); }
+
+    .sprint-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .sprint-mission {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .sprint-mission-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 6px;
+    }
+    .sprint-mission-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .deliverables-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 14px;
+    }
+
+    .deliverable {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .deliverable:last-child { margin-bottom: 0; }
+
+    .deliverable-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+    .sprint-card:nth-child(odd) .deliverable-dot { background: var(--blue); }
+    .sprint-card:nth-child(even) .deliverable-dot { background: var(--violet); }
+    .phase-2 .sprint-card:nth-child(odd) .deliverable-dot { background: var(--teal); }
+    .phase-2 .sprint-card:nth-child(even) .deliverable-dot { background: var(--orange); }
+
+    .deliverable-content { flex: 1; }
+    .deliverable-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .deliverable-desc {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .milestone {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      margin-top: auto;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .milestone strong {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 6px;
+    }
+
+    /* ─── CTA SECTION ─────────────────────────────── */
+    .cta-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 96px 48px;
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 20px;
+      line-height: 1.15;
+    }
+    .cta-section h2 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta-section p {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 36px;
+      line-height: 1.65;
+    }
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 32px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .footer-logo span { color: var(--blue); }
+    .footer-copy { font-size: 12px; color: var(--label); }
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; flex-direction: column; position: fixed; top: 61px; left: 0; right: 0; background: rgba(6,9,26,0.98); padding: 28px 24px 36px; gap: 24px; border-bottom: 1px solid var(--border); z-index: 99; justify-content: flex-start; }
+      .nav-links.open { display: flex; }
+      .nav-hamburger { display: flex; }
+      .hero { padding: 64px 24px 56px; }
+      .timeline-bar, .phase { padding: 0 24px 56px; }
+      .timeline-track { flex-direction: column; }
+      .timeline-segment { border-right: none; border-bottom: 1px solid var(--border); }
+      .timeline-segment:last-child { border-bottom: none; }
+      .phase-header { flex-direction: column; gap: 20px; }
+      .phase-outcome { max-width: 100%; }
+      .sprints { grid-template-columns: 1fr; }
+      .cta-section { padding: 64px 24px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">GTMVelocity<span>.ai</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="framework.html" class="nav-link">Framework</a>
+    <a href="engagement.html" class="nav-link active">Engagement</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="about.html" class="nav-link">About</a>
+  </div>
+  <div class="nav-right">
+    <a href="mailto:josh@gtmvelocity.ai" class="nav-cta">Contact Us</a>
+    <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Two Phases · 180 Days · Full Handoff</div>
+  <h1>The Blueprint &amp;<br/><em>Backbone Sprint.</em></h1>
+  <p class="hero-sub">
+    A structured, time-boxed engagement designed to install a complete, AI-powered revenue engine — and leave your team fully equipped to run it without us.
+  </p>
+</section>
+
+<!-- TIMELINE BAR -->
+<div class="timeline-bar">
+  <div class="timeline-track">
+    <div class="timeline-segment seg-1">
+      <div class="timeline-days">Days 1–45</div>
+      <div class="timeline-label">Deep Customer Intelligence</div>
+      <div class="timeline-pillar">Pillar 01 · Intelligence</div>
+    </div>
+    <div class="timeline-segment seg-2">
+      <div class="timeline-days">Days 46–90</div>
+      <div class="timeline-label">GTM Architecture Installation</div>
+      <div class="timeline-pillar">Pillar 02 · Architecture</div>
+    </div>
+    <div class="timeline-segment seg-3">
+      <div class="timeline-days">Days 91–135</div>
+      <div class="timeline-label">Field Enablement Agents</div>
+      <div class="timeline-pillar">Pillar 03 · Acceleration</div>
+    </div>
+    <div class="timeline-segment seg-4">
+      <div class="timeline-days">Days 136–180</div>
+      <div class="timeline-label">Revenue Intelligence Agents</div>
+      <div class="timeline-pillar">Pillar 03 · Acceleration</div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE I -->
+<section class="phase phase-1">
+
+  <div class="phase-header phase-1-header">
+    <div class="phase-badge">I</div>
+    <div class="phase-meta">
+      <div class="phase-tag">Phase I · Days 1–90</div>
+      <div class="phase-title">The Blueprint &amp; Backbone Sprint</div>
+      <div class="phase-focus">Focus: Pillar 01 (Intelligence) &amp; Pillar 02 (GTM Operating Model)<br/>The Goal: Eradicate guesswork, establish a unified revenue language, and build a highly repeatable, manual process that works.</div>
+    </div>
+    <div class="phase-outcome">
+      <strong>Phase I Off-Ramp</strong>
+      The revenue engine is completely standardized. The human process is organized, predictable, and ready to scale.
+    </div>
+  </div>
+
+  <div class="sprints">
+
+    <div class="sprint-card">
+      <div class="sprint-header">
+        <div class="sprint-days">Days 1–45</div>
+        <div class="sprint-title">Deep Customer Intelligence</div>
+      </div>
+      <div class="sprint-mission">
+        <div class="sprint-mission-label">The Mission</div>
+        <div class="sprint-mission-text">Extract the objective truth about why the company wins, who actually uses the product, and where revenue leaks.</div>
+      </div>
+      <div>
+        <div class="deliverables-label">Tangible Shipped Assets</div>
+        <div class="deliverable">
+          <div class="deliverable-dot"></div>
+          <div class="deliverable-content">
+            <div class="deliverable-name">The Quantitative ICP Scoring Matrix</div>
+            <div class="deliverable-desc">A dynamic, weighted template deployed in their CRM to instantly separate tier-1 target profiles from baseline noise.</div>
+          </div>
+        </div>
+        <div class="deliverable">
+          <div class="deliverable-dot"></div>
+          <div class="deliverable-content">
+            <div class="deliverable-name">The Pain-to-Impact Index</div>
+            <div class="deliverable-desc">A validated repository of actual customer language, usage drop-off triggers, and persona maps (Buyer vs. User).</div>
+          </div>
+        </div>
+      </div>
+      <div class="milestone">
+        <strong>Milestone Checkpoint</strong>
+        Absolute cross-functional alignment on exactly who the ideal customer is and what narrative wins them.
+      </div>
+    </div>
+
+    <div class="sprint-card">
+      <div class="sprint-header">
+        <div class="sprint-days">Days 46–90</div>
+        <div class="sprint-title">GTM Architecture Installation</div>
+      </div>
+      <div class="sprint-mission">
+        <div class="sprint-mission-label">The Mission</div>
+        <div class="sprint-mission-text">Map the lifecycle and establish the structural rules of engagement across Marketing, Sales, and Success.</div>
+      </div>
+      <div>
+        <div class="deliverables-label">Tangible Shipped Assets</div>
+        <div class="deliverable">
+          <div class="deliverable-dot"></div>
+          <div class="deliverable-content">
+            <div class="deliverable-name">The Unified Lifecycle Blueprint</div>
+            <div class="deliverable-desc">Hard entry/exit criteria defined for every customer lifecycle stage.</div>
+          </div>
+        </div>
+        <div class="deliverable">
+          <div class="deliverable-dot"></div>
+          <div class="deliverable-content">
+            <div class="deliverable-name">Cross-Functional Handoff SLAs</div>
+            <div class="deliverable-desc">Operational playbooks specifying the exact mechanics of account handoffs between teams.</div>
+          </div>
+        </div>
+        <div class="deliverable">
+          <div class="deliverable-dot"></div>
+          <div class="deliverable-content">
+            <div class="deliverable-name">The Velocity Leakage Dashboard</div>
+            <div class="deliverable-desc">A clean data view built into their reporting layer tracking pipeline velocity and conversion bottlenecks.</div>
+          </div>
+        </div>
+      </div>
+      <div class="milestone">
+        <strong>Milestone Checkpoint</strong>
+        Common language, defined ownership, and full lifecycle coverage across every revenue function.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PHASE II -->
+<section class="phase phase-2">
+
+  <div class="phase-header phase-2-header">
+    <div class="phase-badge">II</div>
+    <div class="phase-meta">
+      <div class="phase-tag">Phase II · Days 91–180</div>
+      <div class="phase-title">The AI-Native Acceleration Sprint</div>
+      <div class="phase-focus">Focus: Pillar 03 (Operational Model / Intelligent Automation)<br/>The Goal: Take the clean, manual processes installed in Phase I and systematically supercharge them with purpose-built AI agents.</div>
+    </div>
+    <div class="phase-outcome">
+      <strong>Phase II Off-Ramp</strong>
+      Rep administrative time drops drastically, pipeline velocity increases, and the business has an embedded, proprietary AI revenue stack.
+    </div>
+  </div>
+
+  <div class="sprints">
+
+    <div class="sprint-card">
+      <div class="sprint-header">
+        <div class="sprint-days">Days 91–135</div>
+        <div class="sprint-title">Role-Based Field Enablement Agents</div>
+      </div>
+      <div class="sprint-mission">
+        <div class="sprint-mission-label">The Mission</div>
+        <div class="sprint-mission-text">Embed AI directly into the daily workflows of reps to eliminate manual drag and amplify executive capacity.</div>
+      </div>
+      <div>
+        <div class="deliverables-label">Tangible Shipped Assets</div>
+        <div class="deliverable">
+          <div class="deliverable-dot"></div>
+          <div class="deliverable-content">
+            <div class="deliverable-name">The Custom Meeting Prep Agent</div>
+            <div class="deliverable-desc">An agentic prompt structure that parses target account data, LinkedIn profiles, and Phase I ICP criteria to give reps a 5-minute pre-flight briefing before every call.</div>
+          </div>
+        </div>
+        <div class="deliverable">
+          <div class="deliverable-dot"></div>
+          <div class="deliverable-content">
+            <div class="deliverable-name">Post-Call Summary &amp; CRM Auto-Sync</div>
+            <div class="deliverable-desc">Automated workflows that transcribe calls, extract critical methodology criteria, and push clean data directly into CRM fields without rep data entry.</div>
+          </div>
+        </div>
+        <div class="deliverable">
+          <div class="deliverable-dot"></div>
+          <div class="deliverable-content">
+            <div class="deliverable-name">Dynamic Battlecard &amp; Objection Handler</div>
+            <div class="deliverable-desc">An internal AI tool trained exclusively on Phase I Pain→Impact stories to feed reps contextual competitive angles in real-time.</div>
+          </div>
+        </div>
+      </div>
+      <div class="milestone">
+        <strong>Milestone Checkpoint</strong>
+        Every rep has AI-assisted pre-call prep, automated post-call logging, and real-time competitive support.
+      </div>
+    </div>
+
+    <div class="sprint-card">
+      <div class="sprint-header">
+        <div class="sprint-days">Days 136–180</div>
+        <div class="sprint-title">Revenue Intelligence &amp; Retention Agents</div>
+      </div>
+      <div class="sprint-mission">
+        <div class="sprint-mission-label">The Mission</div>
+        <div class="sprint-mission-text">Move AI upstream to leadership and downstream to Customer Success to safeguard and project revenue.</div>
+      </div>
+      <div>
+        <div class="deliverables-label">Tangible Shipped Assets</div>
+        <div class="deliverable">
+          <div class="deliverable-dot"></div>
+          <div class="deliverable-content">
+            <div class="deliverable-name">The Proactive Churn Risk Engine</div>
+            <div class="deliverable-desc">An automated alerting system that monitors customer product telemetry and support sentiment to flag accounts heading off track before they churn.</div>
+          </div>
+        </div>
+        <div class="deliverable">
+          <div class="deliverable-dot"></div>
+          <div class="deliverable-content">
+            <div class="deliverable-name">Leadership Update &amp; Forecast Narrative Generator</div>
+            <div class="deliverable-desc">Automated prompts that query weekly pipeline changes and generate an objective, data-backed narrative for board or executive consumption.</div>
+          </div>
+        </div>
+      </div>
+      <div class="milestone">
+        <strong>Milestone Checkpoint</strong>
+        Leadership has automated, objective pipeline visibility. Customer Success has proactive churn signals. The AI revenue stack is live and owned by the team.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Ready to start your<br/><em>180-day sprint?</em></h2>
+  <p>Every engagement begins with a discovery conversation to understand your current state and tailor the sprint to your team's specific context.</p>
+  <a href="mailto:josh@gtmvelocity.ai" class="btn-primary">Schedule a Discovery Call →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GTMVelocity<span>.ai</span></div>
+  <div class="footer-copy">© 2026 GTMVelocity.ai · Built for AI-native revenue teams</div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>

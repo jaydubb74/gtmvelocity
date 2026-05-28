@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — GTMVelocity.ai</title>
+  <meta name="description" content="GTMVelocity is Josh Wetzel. 25 years building revenue engines, 2x $100M+, 4 exits, $4B in equity created." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #06091A;
+      --surface: #0C1128;
+      --surface2:#111832;
+      --border:  rgba(255,255,255,0.07);
+      --blue:    #2D9CDB;
+      --violet:  #7C5CFC;
+      --teal:    #00C9A7;
+      --orange:  #F2994A;
+      --text:    #F0F2FA;
+      --muted:   #8B93B0;
+      --label:   #5A6380;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,9,26,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      gap: 24px;
+    }
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--blue); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex: 1;
+      justify-content: center;
+    }
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--text); font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-cta {
+      display: inline-block;
+      padding: 9px 22px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 96px 48px 80px;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(45,156,219,0.1);
+      border: 1px solid rgba(45,156,219,0.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 28px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* ─── STATS ───────────────────────────────────── */
+    .stats {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .stat-cell {
+      background: var(--surface);
+      padding: 36px 28px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(32px, 3.5vw, 44px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+    .stat-cell:nth-child(1) .stat-value { color: var(--blue); }
+    .stat-cell:nth-child(2) .stat-value { color: var(--violet); }
+    .stat-cell:nth-child(3) .stat-value { color: var(--teal); }
+    .stat-cell:nth-child(4) .stat-value { color: var(--orange); }
+
+    .stat-label {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* ─── BIO ─────────────────────────────────────── */
+    .bio {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .bio-main {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .bio-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--label);
+    }
+
+    .bio-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.8px;
+      line-height: 1.15;
+    }
+
+    .bio-title {
+      font-size: 15px;
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .bio-text {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .bio-text + .bio-text { margin-top: -8px; }
+
+    /* ─── SIDEBAR ─────────────────────────────────── */
+    .bio-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 22px;
+    }
+
+    .sidebar-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 14px;
+    }
+
+    .company-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .company-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .company-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .company-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+    }
+
+    .tag-public { background: rgba(45,156,219,0.1); color: #7BC8EC; border: 1px solid rgba(45,156,219,0.15); }
+    .tag-ipo    { background: rgba(0,201,167,0.1); color: #5EDFC9; border: 1px solid rgba(0,201,167,0.15); }
+    .tag-early  { background: rgba(242,153,74,0.1); color: #F9C07A; border: 1px solid rgba(242,153,74,0.15); }
+    .tag-exit   { background: rgba(124,92,252,0.1); color: #B09BFF; border: 1px solid rgba(124,92,252,0.15); }
+
+    .cert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cert-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .cert-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      flex-shrink: 0;
+    }
+
+    /* ─── BELIEF ──────────────────────────────────── */
+    .belief {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 48px 96px;
+    }
+
+    .belief-card {
+      background: linear-gradient(135deg, rgba(45,156,219,0.06), rgba(124,92,252,0.05));
+      border: 1px solid rgba(45,156,219,0.2);
+      border-radius: 16px;
+      padding: 48px 52px;
+    }
+
+    .belief-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 20px;
+    }
+
+    .belief-quote {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(18px, 2.2vw, 24px);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+      letter-spacing: -0.3px;
+      margin-bottom: 20px;
+      max-width: 760px;
+    }
+
+    .belief-body {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 680px;
+    }
+
+    /* ─── CTA ─────────────────────────────────────── */
+    .cta-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 96px 48px;
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 20px;
+      line-height: 1.15;
+    }
+    .cta-section h2 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta-section p {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 36px;
+      line-height: 1.65;
+    }
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 32px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .footer-logo span { color: var(--blue); }
+    .footer-copy { font-size: 12px; color: var(--label); }
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; flex-direction: column; position: fixed; top: 61px; left: 0; right: 0; background: rgba(6,9,26,0.98); padding: 28px 24px 36px; gap: 24px; border-bottom: 1px solid var(--border); z-index: 99; justify-content: flex-start; }
+      .nav-links.open { display: flex; }
+      .nav-hamburger { display: flex; }
+      .hero { padding: 64px 24px 56px; }
+      .stats { padding: 0 24px 56px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .bio { grid-template-columns: 1fr; padding: 0 24px 56px; }
+      .belief { padding: 0 24px 64px; }
+      .belief-card { padding: 36px 28px; }
+      .cta-section { padding: 64px 24px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">GTMVelocity<span>.ai</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="framework.html" class="nav-link">Framework</a>
+    <a href="engagement.html" class="nav-link">Engagement</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="about.html" class="nav-link active">About</a>
+  </div>
+  <div class="nav-right">
+    <a href="mailto:josh@gtmvelocity.ai" class="nav-cta">Contact Us</a>
+    <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">GTMVelocity is Josh Wetzel</div>
+  <h1>I build<br/><em>revenue engines.</em></h1>
+  <p class="hero-sub">
+    25 years running full-stack GTM teams. Two times scaling from pre-revenue to $100M+. Four exits. $4 billion in equity created.
+  </p>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-value">2×</div>
+      <div class="stat-label">Scaled pre-revenue<br/>to $100M+</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-value">4</div>
+      <div class="stat-label">Exits contributing<br/>to $4B equity</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-value">25</div>
+      <div class="stat-label">Years running<br/>full-stack GTM</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-value">200+</div>
+      <div class="stat-label">Team members built<br/>across 3 continents</div>
+    </div>
+  </div>
+</div>
+
+<!-- BIO -->
+<section class="bio">
+
+  <div class="bio-main">
+    <div>
+      <div class="bio-eyebrow">About</div>
+      <div class="bio-name">Josh Wetzel</div>
+      <div class="bio-title">Founder, GTMVelocity.ai</div>
+    </div>
+
+    <p class="bio-text">
+      I have run full-stack GTM teams for the past 25 years — sales, marketing, customer success, partnerships, and revenue operations. I've built teams from zero to 200+ across North America, Europe, and Asia, and I've done it across both PLG and enterprise motions.
+    </p>
+
+    <p class="bio-text">
+      I've operated at large, public companies (eBay, Adobe, Bazaarvoice), helped startups grow into public companies (Shopping.com, PubMatic), and been in the basement or garage of early-stage startups that have gone on to be successful (Polyvore, OneSignal). I've been the first sales leader at four companies, and I started my career in marketing IC roles.
+    </p>
+
+    <p class="bio-text">
+      More recently, I've gone deep on AI-native GTM — designing agentic workflows for inbound qualification, customer enablement, and usage-based outreach that reduce manual work and improve conversion quality. I believe the next revenue leaders won't just manage teams. They'll architect systems where humans and AI work in parallel.
+    </p>
+
+    <p class="bio-text">
+      I have taken AI certifications from Anthropic and Pavilion. This is why I'm passionate about GTMVelocity.ai — I want to empower teams to be better.
+    </p>
+  </div>
+
+  <div class="bio-sidebar">
+
+    <div class="sidebar-card">
+      <div class="sidebar-label">Career Highlights</div>
+      <div class="company-list">
+        <div class="company-row">
+          <span class="company-name">eBay</span>
+          <span class="company-tag tag-public">Public Co.</span>
+        </div>
+        <div class="company-row">
+          <span class="company-name">Adobe</span>
+          <span class="company-tag tag-public">Public Co.</span>
+        </div>
+        <div class="company-row">
+          <span class="company-name">Bazaarvoice</span>
+          <span class="company-tag tag-public">Public Co.</span>
+        </div>
+        <div class="company-row">
+          <span class="company-name">Shopping.com</span>
+          <span class="company-tag tag-ipo">Pre → IPO</span>
+        </div>
+        <div class="company-row">
+          <span class="company-name">PubMatic</span>
+          <span class="company-tag tag-ipo">Pre → IPO</span>
+        </div>
+        <div class="company-row">
+          <span class="company-name">Polyvore</span>
+          <span class="company-tag tag-early">Early Stage</span>
+        </div>
+        <div class="company-row">
+          <span class="company-name">OneSignal</span>
+          <span class="company-tag tag-early">Early Stage</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-label">Certifications</div>
+      <div class="cert-list">
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <span>AI Certification — Anthropic</span>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <span>AI Certification — Pavilion</span>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <span>25 Years GTM Leadership</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-label">First Sales Leader At</div>
+      <div class="cert-list">
+        <div class="cert-item">
+          <div class="cert-dot" style="background:var(--violet);"></div>
+          <span>4 companies, all from zero</span>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot" style="background:var(--violet);"></div>
+          <span>PLG and Enterprise motions</span>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot" style="background:var(--violet);"></div>
+          <span>NA, Europe, and Asia coverage</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BELIEF -->
+<div class="belief">
+  <div class="belief-card">
+    <div class="belief-eyebrow">Why GTMVelocity.ai</div>
+    <div class="belief-quote">"The next revenue leaders won't just manage teams. They'll architect systems where humans and AI work in parallel."</div>
+    <div class="belief-body">
+      After 25 years watching the same patterns repeat — brilliant teams held back by manual execution, founders with great products struggling to systematize their motion, and companies scaling the wrong way before they've built the right foundation — I built GTMVelocity.ai to give growth-stage companies access to the same revenue infrastructure that enterprise teams take years and millions to build. Time-boxed, AI-native, and fully handed over.
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Let's build something<br/><em>that outlasts us.</em></h2>
+  <p>If you're ready to install an AI-powered revenue engine and hand full ownership to your team, let's start the conversation.</p>
+  <a href="mailto:josh@gtmvelocity.ai" class="btn-primary">Get in Touch →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GTMVelocity<span>.ai</span></div>
+  <div class="footer-copy">© 2026 GTMVelocity.ai · Built for AI-native revenue teams</div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>

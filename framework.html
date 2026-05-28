@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The GTMVelocity Framework — GTMVelocity.ai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #06091A;
+      --surface:   #0C1128;
+      --surface2:  #111832;
+      --border:    rgba(255,255,255,0.07);
+      --blue:      #2D9CDB;
+      --violet:    #7C5CFC;
+      --teal:      #00C9A7;
+      --orange:    #F2994A;
+      --text:      #F0F2FA;
+      --muted:     #8B93B0;
+      --label:     #5A6380;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,9,26,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      gap: 24px;
+    }
+
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--blue); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--text); font-weight: 600; }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-cta {
+      display: inline-block;
+      padding: 9px 22px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+    }
+
+    /* ─── HERO ──────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 96px 48px 80px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(45,156,219,0.1);
+      border: 1px solid rgba(45,156,219,0.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 28px;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 640px;
+      margin: 0 auto 0;
+    }
+
+    /* ─── FLOW CONNECTOR ────────────────────────────── */
+    .flow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 0 48px 56px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      max-width: 200px;
+    }
+
+    .flow-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .flow-step:nth-child(1) .flow-num { background: rgba(45,156,219,0.15); color: var(--blue); border: 1px solid rgba(45,156,219,0.3); }
+    .flow-step:nth-child(3) .flow-num { background: rgba(124,92,252,0.15); color: var(--violet); border: 1px solid rgba(124,92,252,0.3); }
+    .flow-step:nth-child(5) .flow-num { background: rgba(0,201,167,0.15); color: var(--teal); border: 1px solid rgba(0,201,167,0.3); }
+
+    .flow-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .flow-arrow {
+      flex: 0 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--label);
+      font-size: 18px;
+      padding-bottom: 24px;
+    }
+
+    /* ─── PILLARS ────────────────────────────────────── */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding: 0 48px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pillar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .pillar:hover {
+      transform: translateY(-2px);
+    }
+
+    .pillar-1 { border-top: 2px solid var(--blue); }
+    .pillar-1:hover { border-color: var(--blue); }
+    .pillar-2 { border-top: 2px solid var(--violet); }
+    .pillar-2:hover { border-color: var(--violet); }
+    .pillar-3 { border-top: 2px solid var(--teal); }
+    .pillar-3:hover { border-color: var(--teal); }
+
+    .pillar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 120px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    .pillar-1::before { background: radial-gradient(ellipse at top left, var(--blue), transparent); }
+    .pillar-2::before { background: radial-gradient(ellipse at top left, var(--violet), transparent); }
+    .pillar-3::before { background: radial-gradient(ellipse at top left, var(--teal), transparent); }
+
+    .pillar-header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pillar-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+    }
+
+    .pillar-1 .pillar-number { color: var(--blue); }
+    .pillar-2 .pillar-number { color: var(--violet); }
+    .pillar-3 .pillar-number { color: var(--teal); }
+
+    .pillar-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+
+    .pillar-subtitle {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: -4px;
+    }
+
+    /* JTBD block */
+    .jtbd-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .jtbd-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 8px;
+    }
+
+    .jtbd-text {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* Activities */
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 12px;
+    }
+
+    .activities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .activity-tag {
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 5px 11px;
+      border-radius: 6px;
+      line-height: 1;
+    }
+
+    .pillar-1 .activity-tag { background: rgba(45,156,219,0.1); color: #7BC8EC; border: 1px solid rgba(45,156,219,0.15); }
+    .pillar-2 .activity-tag { background: rgba(124,92,252,0.1); color: #B09BFF; border: 1px solid rgba(124,92,252,0.15); }
+    .pillar-3 .activity-tag { background: rgba(0,201,167,0.1); color: #5EDFC9; border: 1px solid rgba(0,201,167,0.15); }
+
+    /* Outcomes */
+    .outcomes {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      margin-top: auto;
+    }
+
+    .outcome-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .outcome-item:last-child { margin-bottom: 0; }
+
+    .outcome-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .pillar-1 .outcome-dot { background: var(--blue); }
+    .pillar-2 .outcome-dot { background: var(--violet); }
+    .pillar-3 .outcome-dot { background: var(--teal); }
+
+    /* ─── PHILOSOPHY BAR ─────────────────────────────── */
+    .philosophy {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+
+    .philosophy-inner {
+      background: linear-gradient(135deg, rgba(45,156,219,0.06) 0%, rgba(124,92,252,0.06) 50%, rgba(0,201,167,0.06) 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 48px 56px;
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr 1px 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .divider-v {
+      width: 1px;
+      height: 100%;
+      background: var(--border);
+    }
+
+    .phi-item {
+      text-align: center;
+    }
+
+    .phi-stat {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .phi-stat-1 { color: var(--blue); }
+    .phi-stat-2 { color: var(--violet); }
+    .phi-stat-3 { color: var(--teal); }
+
+    .phi-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ─── PRINCIPLE STRIP ────────────────────────────── */
+    .principle-strip {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 96px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .principle {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .principle-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .principle:nth-child(1) .principle-icon { background: rgba(45,156,219,0.12); }
+    .principle:nth-child(2) .principle-icon { background: rgba(124,92,252,0.12); }
+    .principle:nth-child(3) .principle-icon { background: rgba(0,201,167,0.12); }
+    .principle:nth-child(4) .principle-icon { background: rgba(242,153,74,0.12); }
+    .principle:nth-child(5) .principle-icon { background: rgba(45,156,219,0.12); }
+    .principle:nth-child(6) .principle-icon { background: rgba(124,92,252,0.12); }
+
+    .principle-text strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .principle-text span {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .footer-logo span { color: var(--blue); }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--label);
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; flex-direction: column; position: fixed; top: 61px; left: 0; right: 0; background: rgba(6,9,26,0.98); padding: 28px 24px 36px; gap: 24px; border-bottom: 1px solid var(--border); z-index: 99; justify-content: flex-start; }
+      .nav-links.open { display: flex; }
+      .nav-hamburger { display: flex; }
+      .hero { padding: 64px 24px 56px; }
+      .flow-row { display: none; }
+      .pillars { grid-template-columns: 1fr; padding: 0 24px 56px; }
+      .philosophy { padding: 0 24px 56px; }
+      .philosophy-inner {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 36px 28px;
+      }
+      .divider-v { display: none; }
+      .principle-strip { grid-template-columns: 1fr; padding: 0 24px 64px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">GTMVelocity<span>.ai</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="framework.html" class="nav-link active">Framework</a>
+    <a href="engagement.html" class="nav-link">Engagement</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="about.html" class="nav-link">About</a>
+  </div>
+  <div class="nav-right">
+    <a href="mailto:josh@gtmvelocity.ai" class="nav-cta">Contact Us</a>
+    <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Jobs to Be Done · AI-Native GTM</div>
+  <h1>Three Jobs.<br/>One <em>Revenue System.</em></h1>
+  <p class="hero-sub">
+    Revenue architecture was designed for the subscription era. The GTMVelocity Framework is built for what comes next — a world where AI compresses the cost of intelligence, eliminates repetitive execution, and rewards teams that build their motion on a foundation of customer truth.
+  </p>
+</section>
+
+<!-- FLOW INDICATOR -->
+<div class="flow-row">
+  <div class="flow-step">
+    <div class="flow-num">1</div>
+    <div class="flow-label">Customer<br/>Identification</div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">
+    <div class="flow-num">2</div>
+    <div class="flow-label">GTM Operating<br/>Model</div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">
+    <div class="flow-num">3</div>
+    <div class="flow-label">Operational<br/>Model</div>
+  </div>
+</div>
+
+<!-- PILLARS -->
+<div class="pillars">
+
+  <!-- PILLAR 1 -->
+  <div class="pillar pillar-1">
+    <div class="pillar-header">
+      <div class="pillar-number">01 · Intelligence</div>
+      <div class="pillar-title">Customer<br/>Identification</div>
+      <div class="pillar-subtitle">Know Before You Build</div>
+    </div>
+
+    <div class="jtbd-block">
+      <div class="jtbd-label">The Job to Be Done</div>
+      <div class="jtbd-text">
+        Analyze every available customer touchpoint — usage data, sales calls, win/loss reviews, expansion signals, and support patterns — to build a precise picture of who buys, who uses, what pain is being resolved, and what business impact is created. This intelligence is the foundation everything else is built on.
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Key Activities</div>
+      <div class="activities">
+        <span class="activity-tag">Customer Touchpoint Analysis</span>
+        <span class="activity-tag">Win / Loss Review</span>
+        <span class="activity-tag">Buyer vs. User Mapping</span>
+        <span class="activity-tag">Pain → Impact Stories</span>
+        <span class="activity-tag">ICP Segmentation</span>
+        <span class="activity-tag">Competitive Positioning</span>
+        <span class="activity-tag">Churn Signal Analysis</span>
+        <span class="activity-tag">Expansion Pattern Review</span>
+      </div>
+    </div>
+
+    <div class="outcomes">
+      <div class="section-label">Outcomes</div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Clear ICP with scoring criteria and segment boundaries</span>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Buyer and user persona profiles that reflect reality, not assumptions</span>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Impact stories that anchor all downstream messaging</span>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Refined positioning and differentiated value proposition</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PILLAR 2 -->
+  <div class="pillar pillar-2">
+    <div class="pillar-header">
+      <div class="pillar-number">02 · Architecture</div>
+      <div class="pillar-title">GTM Operating<br/>Model</div>
+      <div class="pillar-subtitle">Design Your Motion</div>
+    </div>
+
+    <div class="jtbd-block">
+      <div class="jtbd-label">The Job to Be Done</div>
+      <div class="jtbd-text">
+        Establish the architecture of how you go to market — common language, customer lifecycle stages, sales methodology, and the engagement model that matches your product and stage. Without this architecture, teams move fast in different directions. With it, every function operates as one coordinated system.
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Key Activities</div>
+      <div class="activities">
+        <span class="activity-tag">Customer Lifecycle Design</span>
+        <span class="activity-tag">Sales Methodology</span>
+        <span class="activity-tag">Engagement Model (PLG / PLS / SLG)</span>
+        <span class="activity-tag">Critical Touchpoint Mapping</span>
+        <span class="activity-tag">Cross-Functional Accountability</span>
+        <span class="activity-tag">Segment Motion Design</span>
+        <span class="activity-tag">Handoff Playbooks</span>
+        <span class="activity-tag">KPI Framework</span>
+      </div>
+    </div>
+
+    <div class="outcomes">
+      <div class="section-label">Outcomes</div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Common language across Marketing, Sales, and Customer Success</span>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Defined critical touchpoints with clear ownership and handoffs</span>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Engagement model matched to your product, market, and growth stage</span>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Cross-functional accountability with shared KPIs across the full lifecycle</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PILLAR 3 -->
+  <div class="pillar pillar-3">
+    <div class="pillar-header">
+      <div class="pillar-number">03 · Acceleration</div>
+      <div class="pillar-title">Operational<br/>Model</div>
+      <div class="pillar-subtitle">Scale Through Intelligent Automation</div>
+    </div>
+
+    <div class="jtbd-block">
+      <div class="jtbd-label">The Job to Be Done</div>
+      <div class="jtbd-text">
+        Orchestrate AI-powered automation across every field team and customer-facing touchpoint to eliminate human friction and amplify rep performance. By systematically targeting your highest-value manual tasks with purpose-built agents, you create a compounding GTM advantage — more output, less overhead, consistent execution at every level.
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Key Activities</div>
+      <div class="activities">
+        <span class="activity-tag">Meeting Prep Agent</span>
+        <span class="activity-tag">Prospect Outreach &amp; Sequencing</span>
+        <span class="activity-tag">Post-Call Summary &amp; CRM Sync</span>
+        <span class="activity-tag">Battlecard Builder</span>
+        <span class="activity-tag">Objection Handler</span>
+        <span class="activity-tag">Deal Strategy Assist</span>
+        <span class="activity-tag">Proposal &amp; ROI Calculator</span>
+        <span class="activity-tag">Pipeline Health Scoring</span>
+        <span class="activity-tag">Forecast Narrative</span>
+        <span class="activity-tag">Early Churn Risk Detection</span>
+        <span class="activity-tag">QBR Builder</span>
+        <span class="activity-tag">Leadership Update Generator</span>
+        <span class="activity-tag">Competitive Intel</span>
+        <span class="activity-tag">Weekly Planner &amp; Coaching Digest</span>
+      </div>
+    </div>
+
+    <div class="outcomes">
+      <div class="section-label">Outcomes</div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>AI agent stack deployed by role and workflow stage</span>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Highest-value manual tasks systematically eliminated</span>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Team capacity multiplied without proportional headcount growth</span>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-dot"></div>
+        <span>Consistent, data-driven execution across every rep and customer touchpoint</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PHILOSOPHY / STATS BAR -->
+<div class="philosophy">
+  <div class="philosophy-inner">
+    <div class="phi-item">
+      <div class="phi-stat phi-stat-1">Intelligence</div>
+      <div class="phi-desc">Know your customer with precision before you build a single playbook or send a single email</div>
+    </div>
+    <div class="divider-v"></div>
+    <div class="phi-item">
+      <div class="phi-stat phi-stat-2">Architecture</div>
+      <div class="phi-desc">Design a motion your whole organization can run consistently — not just your best reps</div>
+    </div>
+    <div class="divider-v"></div>
+    <div class="phi-item">
+      <div class="phi-stat phi-stat-3">Acceleration</div>
+      <div class="phi-desc">Deploy AI to multiply output — process first, automation second, always in that order</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRINCIPLES -->
+<div class="principle-strip">
+  <div class="principle">
+    <div class="principle-icon">🎯</div>
+    <div class="principle-text">
+      <strong>Customer Truth First</strong>
+      <span>Every strategy, playbook, and automation is grounded in real customer data — not assumptions or best guesses.</span>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="principle-icon">⚙️</div>
+    <div class="principle-text">
+      <strong>Systems Over Heroics</strong>
+      <span>Repeatable systems that any rep can run beat playbooks that only your best performers can execute.</span>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="principle-icon">🔁</div>
+    <div class="principle-text">
+      <strong>Land, Expand, Renew</strong>
+      <span>Revenue in the AI era flows through the full customer lifecycle — not just the close. Every stage needs a designed motion.</span>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="principle-icon">📐</div>
+    <div class="principle-text">
+      <strong>Process Before Automation</strong>
+      <span>AI multiplies what exists. Build the process right, then automate it. Never the other way around.</span>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="principle-icon">📊</div>
+    <div class="principle-text">
+      <strong>Math Over Intuition</strong>
+      <span>Recurring revenue compounds exponentially. Small, precise improvements in conversion and retention create outsized results.</span>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="principle-icon">🚀</div>
+    <div class="principle-text">
+      <strong>Velocity is Designed, Not Found</strong>
+      <span>Speed in GTM is a byproduct of clarity — clear ICP, clear motion, clear ownership, clear automation. Remove friction; everything accelerates.</span>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GTMVelocity<span>.ai</span></div>
+  <div class="footer-copy">© 2026 GTMVelocity.ai · Built for AI-native revenue teams</div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
