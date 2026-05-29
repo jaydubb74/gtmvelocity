@@ -2,7 +2,7 @@
 
 > Your people, powered up.
 
-Placeholder website for [gtmvelocity.ai](https://gtmvelocity.ai) — a future business focused on AI-powered efficiency for GTM teams.
+Website for [gtmvelocity.ai](https://gtmvelocity.ai) a business focused on AI-powered efficiency for GTM teams.
 
 ## Stack
 
