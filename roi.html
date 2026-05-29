@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROI Calculator — GTMVelocity.ai</title>
+  <meta name="description" content="Estimate the hidden revenue potential inside your existing team. Adjust your team size, OTE, and wasted hours to see what an AI-powered GTM motion unlocks." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.gtmvelocity.ai/roi.html" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #06091A;
+      --surface: #0C1128;
+      --surface2:#111832;
+      --border:  rgba(255,255,255,0.07);
+      --blue:    #2D9CDB;
+      --violet:  #7C5CFC;
+      --teal:    #00C9A7;
+      --text:    #F0F2FA;
+      --muted:   #B0B8CE;
+      --label:   #7280A0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,9,26,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      gap: 24px;
+    }
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--blue); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex: 1;
+      justify-content: center;
+    }
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--text); font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-cta {
+      display: inline-block;
+      padding: 9px 22px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.25s;
+    }
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0; right: 0;
+        background: rgba(6,9,26,0.98);
+        flex-direction: column;
+        padding: 20px 24px;
+        gap: 20px;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-links.open { display: flex; }
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 96px 48px 72px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(45,156,219,0.1);
+      border: 1px solid rgba(45,156,219,0.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 28px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* ─── CALCULATOR WRAPPER ──────────────────────── */
+    .calc-section {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 48px 96px;
+    }
+
+    /* ─── CALCULATOR (reskinned to site design) ───── */
+    .gtm-calc-container {
+      font-family: 'Inter', sans-serif;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.35);
+    }
+
+    .gtm-calc-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    @media (min-width: 768px) {
+      .gtm-calc-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .gtm-calc-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 8px;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .gtm-calc-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .gtm-input-group { margin-bottom: 28px; }
+
+    .gtm-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .gtm-light-text {
+      color: var(--label);
+      font-weight: 400;
+      font-size: 12px;
+    }
+
+    .gtm-dynamic-val {
+      color: var(--blue);
+      font-weight: 600;
+      background: rgba(45,156,219,0.1);
+      border: 1px solid rgba(45,156,219,0.2);
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    /* Slider */
+    .gtm-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 9999px;
+      outline: none;
+    }
+    .gtm-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--blue);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 0 0 3px rgba(45,156,219,0.15);
+    }
+    .gtm-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+      box-shadow: 0 0 0 5px rgba(45,156,219,0.2);
+    }
+    .gtm-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--blue);
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s;
+    }
+    .gtm-slider::-moz-range-thumb:hover { transform: scale(1.25); }
+
+    /* Output column */
+    .gtm-calc-outputs {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .gtm-metric-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .gtm-featured-card {
+      background: linear-gradient(135deg, rgba(45,156,219,0.07), rgba(124,92,252,0.05));
+      border-color: rgba(45,156,219,0.3);
+      border-top: 2px solid var(--blue);
+      position: relative;
+    }
+
+    .gtm-outputs-subgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .gtm-metric-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 6px;
+    }
+
+    .gtm-metric-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .gtm-featured-card .gtm-metric-label { color: var(--blue); }
+    .gtm-featured-card .gtm-metric-value {
+      font-size: 40px;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .gtm-metric-desc {
+      font-size: 12px;
+      color: var(--label);
+      line-height: 1.5;
+    }
+
+    .gtm-calc-note {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      background: rgba(255,255,255,0.02);
+      padding: 14px 18px;
+      border-left: 2px solid rgba(45,156,219,0.3);
+      border-radius: 0 8px 8px 0;
+    }
+    .gtm-calc-note strong { color: var(--text); }
+
+    /* ─── CTA STRIP ───────────────────────────────── */
+    .cta-strip {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 48px 96px;
+    }
+    .cta-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--blue);
+      border-radius: 20px;
+      padding: 52px 40px;
+      text-align: center;
+    }
+    .cta-inner h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(26px, 3.5vw, 36px);
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .cta-inner h2 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta-inner p {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 32px;
+      line-height: 1.65;
+    }
+    .btn-primary {
+      display: inline-block;
+      padding: 13px 28px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+
+    /* ─── FOOTER ───────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--label);
+      font-size: 13px;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    @media (max-width: 640px) {
+      .hero { padding: 64px 24px 48px; }
+      .calc-section { padding: 0 20px 64px; }
+      .cta-strip { padding: 0 20px 64px; }
+      .cta-inner { padding: 36px 24px; }
+      .gtm-calc-container { padding: 24px 20px; }
+      .gtm-outputs-subgrid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">GTMVelocity<span>.ai</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="framework.html" class="nav-link">Framework</a>
+    <a href="engagement.html" class="nav-link">Engagement</a>
+    <a href="roi.html" class="nav-link active">ROI</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="about.html" class="nav-link">About</a>
+    <a href="faq.html" class="nav-link">FAQ</a>
+  </div>
+  <div class="nav-right">
+    <a href="contact.html" class="nav-cta">Contact Us</a>
+    <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Revenue Efficiency · AI-Native GTM</div>
+  <h1>What's the hidden cost<br/>of <em>the status quo?</em></h1>
+  <p class="hero-sub">Adjust your team's operating reality below. We'll show you the revenue capacity that's already inside your organization — waiting to be unlocked.</p>
+</section>
+
+<!-- CALCULATOR -->
+<div class="calc-section">
+  <div class="gtm-calc-container">
+    <div class="gtm-calc-grid">
+
+      <!-- Left: Inputs -->
+      <div class="gtm-calc-inputs">
+        <h3 class="gtm-calc-title">Configure Your Team</h3>
+        <p class="gtm-calc-subtitle">Adjust the sliders to mirror your current revenue team's operating reality.</p>
+
+        <div class="gtm-input-group">
+          <div class="gtm-label-row">
+            <label for="teamSize">Team Size <span class="gtm-light-text">(AEs &amp; CSMs)</span></label>
+            <span id="teamSizeVal" class="gtm-dynamic-val">15</span>
+          </div>
+          <input type="range" id="teamSize" min="5" max="100" step="5" value="15" class="gtm-slider" />
+        </div>
+
+        <div class="gtm-input-group">
+          <div class="gtm-label-row">
+            <label for="repOte">Average Rep OTE</label>
+            <span id="repOteVal" class="gtm-dynamic-val">$150,000</span>
+          </div>
+          <input type="range" id="repOte" min="100000" max="300000" step="10000" value="150000" class="gtm-slider" />
+        </div>
+
+        <div class="gtm-input-group">
+          <div class="gtm-label-row">
+            <label for="wastedHours">Hours Wasted / Rep / Week <span class="gtm-light-text">(Admin &amp; Prep)</span></label>
+            <span id="wastedHoursVal" class="gtm-dynamic-val">10 hrs</span>
+          </div>
+          <input type="range" id="wastedHours" min="2" max="20" step="1" value="10" class="gtm-slider" />
+        </div>
+
+        <div class="gtm-input-group">
+          <div class="gtm-label-row">
+            <label for="dealSize">Average Deal Size <span class="gtm-light-text">(ACV)</span></label>
+            <span id="dealSizeVal" class="gtm-dynamic-val">$50,000</span>
+          </div>
+          <input type="range" id="dealSize" min="10000" max="250000" step="5000" value="50000" class="gtm-slider" />
+        </div>
+      </div>
+
+      <!-- Right: Outputs -->
+      <div class="gtm-calc-outputs">
+        <h3 class="gtm-calc-title">The Hidden Capacity</h3>
+
+        <div class="gtm-metric-card gtm-featured-card">
+          <div class="gtm-metric-label">Hidden Revenue Potential</div>
+          <div id="revenuePotential" class="gtm-metric-value">$75,000</div>
+          <div class="gtm-metric-desc">Based on a conservative 10% efficiency boost in closing execution.</div>
+        </div>
+
+        <div class="gtm-outputs-subgrid">
+          <div class="gtm-metric-card">
+            <div class="gtm-metric-label">Found Headcount</div>
+            <div id="headcountUnlocked" class="gtm-metric-value">3.8 Reps</div>
+            <div class="gtm-metric-desc">Equivalent full-time staff added without hiring costs.</div>
+          </div>
+          <div class="gtm-metric-card">
+            <div class="gtm-metric-label">Hours Reclaimed</div>
+            <div id="hoursReclaimed" class="gtm-metric-value">7,200</div>
+            <div class="gtm-metric-desc">Total annual high-value hours returned to customer-facing work.</div>
+          </div>
+        </div>
+
+        <div class="gtm-calc-note">
+          <strong>The Logic:</strong> Reclaiming internal drag turns overhead back into pipeline velocity. By optimizing sales prep and automating internal workflows, your existing team operates with the capacity of a larger organization.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <div class="cta-inner">
+    <h2>Ready to unlock<br/><em>that capacity?</em></h2>
+    <p>We install the infrastructure in 90–180 days, then hand it off completely. Your team owns it.</p>
+    <a href="contact.html" class="btn-primary">Start the Conversation →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 GTMVelocity.ai</span>
+  <div style="display:flex;gap:24px;">
+    <a href="framework.html">Framework</a>
+    <a href="engagement.html">Engagement</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  (function () {
+    const teamSizeInput   = document.getElementById('teamSize');
+    const repOteInput     = document.getElementById('repOte');
+    const wastedHoursInput= document.getElementById('wastedHours');
+    const dealSizeInput   = document.getElementById('dealSize');
+
+    const teamSizeVal   = document.getElementById('teamSizeVal');
+    const repOteVal     = document.getElementById('repOteVal');
+    const wastedHoursVal= document.getElementById('wastedHoursVal');
+    const dealSizeVal   = document.getElementById('dealSizeVal');
+
+    const revenuePotential  = document.getElementById('revenuePotential');
+    const headcountUnlocked = document.getElementById('headcountUnlocked');
+    const hoursReclaimed    = document.getElementById('hoursReclaimed');
+
+    const fmt$  = (n) => '$' + n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const fmtN  = (n) => n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    function calculate() {
+      const teamSize   = parseInt(teamSizeInput.value, 10);
+      const repOte     = parseInt(repOteInput.value, 10);
+      const wastedHours= parseInt(wastedHoursInput.value, 10);
+      const dealSize   = parseInt(dealSizeInput.value, 10);
+
+      teamSizeVal.textContent    = teamSize;
+      repOteVal.textContent      = fmt$(repOte);
+      wastedHoursVal.textContent = wastedHours + ' hrs';
+      dealSizeVal.textContent    = fmt$(dealSize);
+
+      const annualHours    = teamSize * wastedHours * 48;
+      const repsUnlocked   = (wastedHours / 40) * teamSize;
+      const revenueUncapped= teamSize * 1.5 * 0.10 * dealSize;
+
+      hoursReclaimed.textContent    = fmtN(annualHours);
+      headcountUnlocked.textContent = repsUnlocked.toFixed(1) + ' Reps';
+      revenuePotential.textContent  = fmt$(revenueUncapped);
+    }
+
+    teamSizeInput.addEventListener('input', calculate);
+    repOteInput.addEventListener('input', calculate);
+    wastedHoursInput.addEventListener('input', calculate);
+    dealSizeInput.addEventListener('input', calculate);
+
+    calculate();
+  })();
+</script>
+
+</body>
+</html>
