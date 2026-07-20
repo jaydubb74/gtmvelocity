@@ -1,4 +1,8 @@
 .git
 .wrangler
+.claude
+src
 wrangler.toml
 .assetsignore
+.gitignore
+README.md

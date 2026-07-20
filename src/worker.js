@@ -9,7 +9,7 @@
  *
  * Required secret (run once, never commit the value):
  *   wrangler secret put TURNSTILE_SECRET_KEY
- *   → paste: 0x4AAAAAADX8a_PaeziipAyVvYOHQAAzOGA
+ *   → paste the secret key from the Cloudflare Turnstile dashboard (never commit it)
  *
  * Optional secrets:
  *   wrangler secret put SLACK_WEBHOOK_URL   (Slack incoming webhook URL)
@@ -214,7 +214,7 @@ function sanitize(body) {
   const clean = {};
   for (const [field, rules] of Object.entries(FIELD_RULES)) {
     const max = rules.maxLen ?? 2000;
-    clean[field] = (body[field] == null ? '' : String(body[field])).trim().slice(0, max + 10);
+    clean[field] = (body[field] == null ? '' : String(body[field])).trim().slice(0, max);
   }
   clean.submittedAt = new Date().toISOString();
   return clean;
@@ -304,6 +304,8 @@ function buildRawMimeEmail({ from, to, replyTo, subject, html }) {
   const encodedBody = base64MimeEncode(html);
   return [
     'MIME-Version: 1.0',
+    `Message-ID: <${crypto.randomUUID()}@gtmvelocity.ai>`,
+    `Date: ${new Date().toUTCString()}`,
     `From: ${from}`,
     `To: ${to}`,
     `Reply-To: ${replyTo}`,
@@ -431,7 +433,7 @@ async function sendSlackNotification(env, data, route) {
   }
 
   const phoneField = data.phone
-    ? [{ type: 'mrkdwn', text: `*📞 Phone*\n${data.phone}` }]
+    ? [{ type: 'mrkdwn', text: `*📞 Phone*\n${slackEsc(data.phone)}` }]
     : [];
 
   const payload = {
@@ -444,10 +446,10 @@ async function sendSlackNotification(env, data, route) {
       {
         type: 'section',
         fields: [
-          { type: 'mrkdwn', text: `*👤 Name*\n${data.fullName}` },
-          { type: 'mrkdwn', text: `*🏢 Company*\n${data.companyName}` },
-          { type: 'mrkdwn', text: `*✉️ Email*\n<mailto:${data.workEmail}|${data.workEmail}>` },
-          { type: 'mrkdwn', text: `*🏷️ Interest*\n${route.label}` },
+          { type: 'mrkdwn', text: `*👤 Name*\n${slackEsc(data.fullName)}` },
+          { type: 'mrkdwn', text: `*🏢 Company*\n${slackEsc(data.companyName)}` },
+          { type: 'mrkdwn', text: `*✉️ Email*\n<mailto:${slackEsc(data.workEmail)}|${slackEsc(data.workEmail)}>` },
+          { type: 'mrkdwn', text: `*🏷️ Interest*\n${slackEsc(route.label)}` },
           ...phoneField,
         ],
       },
@@ -455,19 +457,8 @@ async function sendSlackNotification(env, data, route) {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `*💬 What they need help with*\n>${data.helpDescription.replace(/\n/g, '\n>')}`,
+          text: `*💬 What they need help with*\n>${slackEsc(data.helpDescription).replace(/\n/g, '\n>')}`,
         },
-      },
-      {
-        type: 'actions',
-        elements: [
-          {
-            type:  'button',
-            text:  { type: 'plain_text', text: 'Reply via Email', emoji: true },
-            url:   `mailto:${data.workEmail}?subject=Re: Your GTMVelocity.ai Inquiry`,
-            style: 'primary',
-          },
-        ],
       },
       {
         type: 'context',
@@ -533,12 +524,21 @@ function corsResponse(response, request) {
   const origin  = request.headers.get('Origin') || '';
   const allowed = CONFIG.allowedOrigins.includes(origin) || origin === '';
   const headers = new Headers(response.headers);
+  headers.set('Vary', 'Origin');
   if (allowed) {
     headers.set('Access-Control-Allow-Origin', origin || '*');
     headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
     headers.set('Access-Control-Allow-Headers', 'Content-Type');
   }
   return new Response(response.body, { status: response.status, headers });
+}
+
+/** Escapes the three characters Slack mrkdwn treats as control characters. */
+function slackEsc(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 function esc(str) {

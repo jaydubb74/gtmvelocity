@@ -3,6 +3,9 @@ main                 = "src/worker.js"
 compatibility_date   = "2025-09-27"
 compatibility_flags  = ["nodejs_compat"]
 
+[observability]
+enabled = true
+
 [assets]
 directory = "."
 binding   = "ASSETS"
@@ -28,7 +31,7 @@ destination_address = "josh@gtmvelocity.ai"
 # Secrets — set once via Wrangler CLI, never commit these values:
 #
 #   wrangler secret put TURNSTILE_SECRET_KEY
-#   → paste: 0x4AAAAAADX8a_PaeziipAyVvYOHQAAzOGA
+#   → paste the secret key from the Cloudflare Turnstile dashboard (never commit it)
 #
 #   wrangler secret put SLACK_WEBHOOK_URL     (optional)
 #   wrangler secret put CONTACT_EMAIL         (optional — override destination)
